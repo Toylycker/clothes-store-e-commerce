@@ -1,0 +1,107 @@
+<?php
+
+return [
+    'app-name' => 'Geyinjek TM',
+    'app-description' => 'Here you can find computers of famous brands at an affordable price',
+
+    'bestsellers' => 'Bestsellers',
+    'bestseller' => 'Bestseller',
+    'discounts' => 'Discounts',
+    'discount' => 'Discount',
+    'news' => 'News',
+    'new' => 'New',
+    'my_outfits'=> 'My outfits',
+    'basket' => 'Basket',
+    'order' => 'order',
+    'orders' => 'Orders',
+    'my_orders' => 'My orders',
+
+
+    'Pants' => 'Pants',
+    'Jeansies' => 'Jeansies',
+    'Jumpers' => 'Jumpers',
+    'Suits' => 'Suits',
+    'Dresses' => 'Dresses',
+    't_shirts' =>"T-shirts",
+
+
+    'outfits' => "Outfits",
+    'ages' => "ages and sizes",
+    'locations' => "Locations",
+    'sellers' => "Sellers",
+    'tags' => "Tags",
+    'optionvalues' => "Option and Values",
+    'user-agents'=> 'User agent',
+    'visitors' => "Visitors" ,
+
+
+    'Company' => 'Company',
+    'description'=>'Description',
+    'description_en'=>'Desçription in english',
+    'sold'=>'sold',
+    'Price'=>'Price',
+    'Type'=>'Type',
+    'Seller'=>'Seller',
+    'Phone'=>'Phone',
+    'Shop Place'=>'Shop Place',
+    'year_or_size'=>'Year  or size',
+    'name_en'=>'English name',
+    'tag'=>'Tag',
+    'edit' => 'Edit',
+    'delete' => 'Delete',
+    'update' => 'Update',
+    'create'=>'Create',
+    'clothes'=>'Clothes',
+
+
+
+    'popular' => 'Popular',
+    'recommends' => 'Recommends',
+    'recommend' => 'Recommend',
+    'credits' => 'Credits',
+    'credit' => 'Credit',
+
+    'search' => 'Search',
+    'total' => 'Total',
+
+    'categories' => 'Categories',
+    'category' => 'Category',
+    'brands' => 'Brands',
+    'brand' => 'Brand',
+    'computers' => 'Computers',
+    'computer' => 'Computer',
+    'options' => 'Options',
+    'option' => 'Option',
+    'values' => 'Values',
+    'value' => 'Value',
+    'users' => 'Users',
+    'user' => 'User',
+
+    'about-us' => 'About us',
+    'contact' => 'Contact',
+
+    'login' => 'Login',
+    'logout' => 'Logout',
+    'register' => 'Register',
+    'name' => 'Name',
+    'username' => 'Username',
+    'password' => 'Password',
+    'password-confirmation' => 'Password confirmation',
+
+    'model-number' => 'Model number',
+    'serial-number' => 'Serial number',
+    'description' => 'Description',
+    'price' => 'Price',
+    'stock' => 'Stock',
+    'discount-percent' => 'Discount percent',
+    'discount-datetime-start' => 'Discount datetime start',
+    'discount-datetime-end' => 'Discount datetime end',
+    'image' => 'Image',
+    'in-stock' => 'In stock',
+    'out-of-stock' => 'Out of stock',
+    'not-found' => ' not found!',
+    'comments' => 'Comments',
+    'write_comment' => 'Write comment',
+    'my_sales' => 'My sales',
+    'mail' => 'Mail'
+];

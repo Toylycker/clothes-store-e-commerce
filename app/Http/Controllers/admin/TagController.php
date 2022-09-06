@@ -1,0 +1,105 @@
+<?php
+
+namespace App\Http\Controllers\admin;
+
+use App\Http\Controllers\Controller;
+use App\Models\Tag;
+use Illuminate\Http\Request;
+
+class TagController extends Controller
+{
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function index(Request $request)
+    {
+        // return $request;
+        $request->validate([
+            'id' => 'nullable|integer|min:1',
+            'name' => 'nullable|string|max:10',
+            'name_en' => 'nullable|string|max:10',
+        ]);
+        $id = $request->has("id")?$request->id:null;
+        $name = $request->has("name")?$request->name:null;
+        $name_en = $request->has("name_en")?$request->name_en:null;
+        $tags = Tag::when($id, function ($query, $id){
+            $query->where('id', $id);
+        })->when($name, function ($query, $name){
+            $query->where('name', 'like', '%' . $name . '%');
+        })->when($name_en, function ($query, $name_en){
+            $query->where('name_en', 'like', '%' . $name_en . '%');
+        })
+        ->orderBy('id')
+        ->paginate(50)
+        ->withQueryString();;
+        return view('admin.tags.index', compact(['tags', 'id', 'name', 'name_en']));
+    }
+
+    /**
+     * Show the form for creating a new resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function create()
+    {
+        //
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function store(Request $request)
+    {
+        //
+    }
+
+    /**
+     * Display the specified resource.
+     *
+     * @param  \App\Models\Tag  $tag
+     * @return \Illuminate\Http\Response
+     */
+    public function show(Tag $tag)
+    {
+        //
+    }
+
+    /**
+     * Show the form for editing the specified resource.
+     *
+     * @param  \App\Models\Tag  $tag
+     * @return \Illuminate\Http\Response
+     */
+    public function edit(Tag $tag)
+    {
+        //
+    }
+
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  \App\Models\Tag  $tag
+     * @return \Illuminate\Http\Response
+     */
+    public function update(Request $request, Tag $tag)
+    {
+        //
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  \App\Models\Tag  $tag
+     * @return \Illuminate\Http\Response
+     */
+    public function destroy(Tag $tag)
+    {
+        //
+    }
+}
