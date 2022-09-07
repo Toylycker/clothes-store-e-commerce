@@ -98,15 +98,12 @@ class OutfitController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function show( $outfit_id, $seller_id){
-        $outfitseller = Outfitseller::where('outfit_id', $outfit_id)->where('seller_id', $seller_id)
-        ->with('seller.location','outfit.values.option', 'outfit.tags', 'outfit.outfitsellers' )->first();
-        $outfits = Outfit::where('id', $outfit_id)->with('values', 'tags', 'outfitsellers.seller')
-        ->get();
-        $comments = Comment::where('outfitseller_id', $outfitseller->id)->with('user', 'outfitseller')->get();
+        $outfit = Outfit::findOrFail($outfit_id)
+        ->with('seller','values.option', 'tags')->first();
+        $comments = Comment::where('outfit_id', $outfit->id)->get();
 
         return view('front.outfits.show', [
-            'outfitseller'=>$outfitseller,
-            'outfits'=>$outfits,
+            'outfit'=>$outfit,
             'comments' =>$comments
         ]);
     }
