@@ -4,7 +4,7 @@ namespace App\Http\Controllers\front;
 
 use App\Http\Controllers\Controller;
 use App\Models\Comment;
-use App\Models\Outfitseller;
+use App\Models\outfit;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -37,14 +37,14 @@ class CommentController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store($outfitseller_id, Request $request)
+    public function store($outfit_id, Request $request)
     {
         $request->validate([
             'comment'=> 'required|string',
         ]);
-        $outfitseller = Outfitseller::findOrFail($outfitseller_id);
+        $outfit = outfit::findOrFail($outfit_id);
         $comment = new Comment;
-        $comment->outfitseller_id = $outfitseller->id;
+        $comment->outfit_id = $outfit->id;
         $comment->user_id = Auth::user()->id;
         $comment->comment = $request->comment;
         $comment->save(); 

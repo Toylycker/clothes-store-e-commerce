@@ -12,7 +12,6 @@ use App\Models\Comment;
 use App\Models\Image;
 use Illuminate\Support\Str;
 use App\Models\Seller;
-use App\Models\OutfitSeller;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\Facades\Storage;
@@ -97,8 +96,8 @@ class OutfitController extends Controller
      * @param  \App\Models\Outfit  $outfit
      * @return \Illuminate\Http\Response
      */
-    public function show( $outfit_id, $seller_id){
-        $outfit = Outfit::findOrFail($outfit_id)
+    public function show( $outfit_id){
+        $outfit = Outfit::where('id', $outfit_id)
         ->with('seller','values.option', 'tags')->first();
         $comments = Comment::where('outfit_id', $outfit->id)->get();
 
@@ -115,13 +114,8 @@ class OutfitController extends Controller
         }else{
             abort(403);
         }
-         $sellers = Seller::get();
         $outfit = Outfit::where('id', $id)
-            ->with(['outfitsellers.seller'])
-            ->firstOrFail();
-        $outfitseller = Outfitseller::where('outfit_id', $id)
-            ->where('seller_id', $seller_id)
-            ->with(['outfit'])
+            ->with(['seller'])
             ->firstOrFail();
         $ages = Age::orderBy('id')
             ->get();
@@ -133,12 +127,10 @@ class OutfitController extends Controller
             ->get();
 
         return view('front.outfits.edit', [
-            'outfit' => $outfit,
             'ages' => $ages,
             'tags' => $tags,
             'options' => $options,
-            'outfitseller' => $outfitseller,
-            'sellers' => $sellers,
+            'outfit' => $outfit,
         ]);
     }
 
@@ -177,15 +169,15 @@ class OutfitController extends Controller
         $outfit->name = $name;
         $outfit->name_en = $name_en;
         $outfit->slug = Str::slug($name) . '-' . $outfit->id;
-        $outfitseller->description = $request->description ?: null;
-        $outfitseller->description_en = $request->description_en ?: null;
-        $outfitseller->price = $request->price;
-        $outfitseller->stock = $request->stock;
-        $outfitseller->discount_percent = $request->discount_percent;
-        $outfitseller->credit = $request->credit ?: 0;
+        $outfit->description = $request->description ?: null;
+        $outfit->description_en = $request->description_en ?: null;
+        $outfit->price = $request->price;
+        $outfit->stock = $request->stock;
+        $outfit->discount_percent = $request->discount_percent;
+        $outfit->credit = $request->credit ?: 0;
         $outfit->recommended = $request->recommended ?: 0;
         $outfit->update();
-        $outfitseller->update();
+        $outfit->update();
 
         $outfit->values()->sync($request->values_id);
         $outfit->tags()->sync($request->tags);
@@ -205,25 +197,25 @@ class OutfitController extends Controller
         }
 
         $success = trans('app.update-response', ['name' => $outfit->name]);
-        return redirect()->route('outfit.show', [$outfit->id, $seller->id])
+        return redirect()->route('outfit.show', [$outfit->id])
             ->with([
                 'success' => $success,
             ]);
     }
 
 
-    public function delete($id, $seller_id)
+    public function delete($id)
     {
 
-        $outfitseller = Outfitseller::where('outfit_id', $id)->where('seller_id', $seller_id)
+        $outfit = outfit::where('id', $id)->with('seller')
             ->firstOrFail();
-        if (Auth::user()->seller != null and Auth::user()->seller->id == $seller_id or Auth::user()->role =="admin"){
+        if (Auth::user()->seller != null and Auth::user()->seller->id == $outfit->seller->id or Auth::user()->role =="admin"){
             // pass;
         }else{
             abort(403);
         }
-        $success = trans('app.delete-response', ['name' => $outfitseller->outfit->name]);
-        $outfitseller->delete();
+        $success = trans('app.delete-response', ['name' => $outfit->name]);
+        $outfit->delete();
 
         if(Auth::user()->role == 'admin'){
             return redirect()->route('outfits.home')
@@ -242,10 +234,7 @@ class OutfitController extends Controller
     public function create()
     {
         $sellers = Seller::get();
-        $outfit = Outfit::with(['outfitsellers.seller'])
-            ->get();
-        $outfitseller = Outfitseller::with(['outfit'])
-            ->get();
+        $outfit = Outfit::get();
         $ages = Age::orderBy('id')
             ->get();
         $tags = Tag::orderBy('id')
@@ -260,7 +249,6 @@ class OutfitController extends Controller
             'ages' => $ages,
             'tags' => $tags,
             'options' => $options,
-            'outfitseller' => $outfitseller,
             'sellers' => $sellers,
         ]);
     }
@@ -270,10 +258,10 @@ class OutfitController extends Controller
         $request->validate([
             'description' => 'nullable|string|max:2550',
             'price' => 'required|numeric|min:0',
-            'stock' => 'required|integer|min:0',
-            'discount_percent' => 'required|integer|min:0',
-            'discount_datetime_start' => 'required|date',
-            'discount_datetime_end' => 'required|date',
+            'stock' => 'nullable|integer|min:0',
+            'discount_percent' => 'nullable|integer|min:0',
+            'discount_datetime_start' => 'nullable|date',
+            'discount_datetime_end' => 'nullable|date',
             'credit' => 'nullable|boolean',
             'recommended' => 'nullable|boolean',
             'values_id' => 'required|array',
@@ -288,25 +276,22 @@ class OutfitController extends Controller
 
     // outfit
     $outfit = new Outfit;
-    $outfitseller = new Outfitseller;
     $outfit->age_id = $age->id;
     $outfit->name = $name;
     $outfit->name_en = $name_en;
     $outfit->slug = Str::slug($name) . '-' . $outfit->id;
     $outfit->recommended = $request->recommended ?: 0;
-    $outfit->save();
-    $outfitseller->outfit_id = $outfit->id;
-    $outfitseller->seller_id = $seller->id;
-    $outfitseller->description = $request->description ?: null;
-    $outfitseller->description_en = $request->description_en ?: null;
-    $outfitseller->price = $request->price;
-    $outfitseller->stock = $request->stock;
-    $outfitseller->discount_percent = $request->discount_percent;
-    $outfitseller->discount_datetime_start = Carbon::parse($request->discount_datetime_start)->toDateTimeString();
-    $outfitseller->discount_datetime_end = Carbon::parse($request->discount_datetime_end)->toDateTimeString();
-    $outfitseller->credit = $request->credit ?: 0;
+    $outfit->seller_id = $seller->id;
+    $outfit->description = $request->description ?: null;
+    $outfit->description_en = $request->description_en ?: null;
+    $outfit->price = $request->price;
+    $outfit->stock = $request->stock;
+    $outfit->discount_percent = $request->discount_percent;
+    $outfit->discount_datetime_start = Carbon::parse($request->discount_datetime_start)->toDateTimeString();
+    $outfit->discount_datetime_end = Carbon::parse($request->discount_datetime_end)->toDateTimeString();
+    $outfit->credit = $request->credit ?: 0;
     $outfit->recommended = $request->recommended ?: 0;
-    $outfitseller->save();
+    $outfit->save();
 
     $outfit->values()->sync($request->values_id);
     $outfit->tags()->sync($request->tags);
@@ -338,7 +323,7 @@ class OutfitController extends Controller
     $success = trans('app.update-response', ['name' => $outfit->name]);
 
         $success = trans('app.store-response', ['name' => $outfit->name]);
-        return redirect()->route('outfit.show', [$outfit->id, $seller->id])
+        return redirect()->route('show', [$outfit->id])
             ->with([
                 'success' => $success,
             ]);

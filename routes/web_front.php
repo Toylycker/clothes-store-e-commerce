@@ -56,7 +56,7 @@ Route::middleware(['auth', 'seller'])->controller(SellerController::class)->name
 
 Route::controller(OutfitController::class)->group(function () {
     Route::get('/outfits/home', 'index')->name('outfits.home');
-    Route::get('/outfit/{seller_id}/{outfit_id}/show', 'show')->name('outfit.show');
+    Route::get('/outfit/{outfit_id}/show', 'show')->name('outfit.show');
     Route::get('/outfit/{slug}/favorite', 'favorite')->name('computer.favorite')->where('slug', '[0-9A-Za-z-]+');
     Route::get('/outfit/{slug}/busket', 'busket')->name('computer.busket')->where('slug', '[0-9A-Za-z-]+');
 });
@@ -66,7 +66,7 @@ Route::middleware(['auth', 'seller'])->controller(OutfitController::class)->grou
 Route::controller(OutfitController::class)->middleware('auth')->group(function () {
     Route::get('/outfit/{outfit_id}/{seller_id}/edit', 'edit')->name('outfit.edit');
     Route::put('/outfit/{id}/update', 'update')->name('outfit.update');
-    Route::delete('/outfit/{id}/{seller_id}/delete', 'delete')->name('outfit.delete');
+    Route::delete('/outfit/{id}/delete', 'delete')->name('outfit.delete');
     Route::post('/outfit/store', 'store')->name('outfit.store');
 });
 

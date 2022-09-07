@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\OutfitSeller;
 use App\Models\Seller;
 use App\Models\Location;
+use App\Models\Outfit;
 use Illuminate\Support\Facades\Auth;
 
 class SellerController extends Controller
@@ -15,10 +16,10 @@ class SellerController extends Controller
     public function my_outfits()
     {
         $seller_id = Auth::user()->seller->id?:abort('403');
-        $outfitsellers = Outfitseller::where('seller_id', $seller_id)
-        ->with('seller.location','outfit.values.option', 'outfit.tags')->get();
+        $outfits = Outfit::where('seller_id', $seller_id)
+        ->with('seller.location','values.option', 'tags')->get();
 
-        return view('front.seller.my_outfits', compact("outfitsellers"));
+        return view('front.seller.my_outfits', compact("outfits"));
     }
 
     public function create()

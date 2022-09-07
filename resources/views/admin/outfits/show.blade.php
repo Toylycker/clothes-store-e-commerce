@@ -1,13 +1,13 @@
 @extends('front.layouts.app')
-@section('title') {{ $outfitseller->outfit->name() }} @endsection
+@section('title') {{ $outfit->name() }} @endsection
 @section('content')
     <div class="container-xxl py-3">
         <div class="d-flex justify-content-between align-items-center border-bottom py-2 mb-3">
-            <div class="h4 text-danger">{{ $outfitseller->outfit->name() }}</div>
+            <div class="h4 text-danger">{{ $outfit->name() }}</div>
             @auth
-            @if (Auth::user()->seller != null and Auth::user()->seller->id == $outfitseller->seller->id or Auth::user()->role=='admin')
+            @if (Auth::user()->seller != null and Auth::user()->seller->id == $outfit->seller->id or Auth::user()->role=='admin')
                 <div>
-                    <a href="{{ route('admin.outfit.edit', [$outfitseller->outfit->id, $outfitseller->seller_id]) }}" class="btn btn-success btn-sm text-decoration-none">
+                    <a href="{{ route('admin.outfit.edit', [$outfit->id, $outfit->seller_id]) }}" class="btn btn-success btn-sm text-decoration-none">
                         <i class="bi bi-pencil-fill"></i> @lang('app.edit')
                     </a>
                     <button type="button" class="btn btn-secondary btn-sm text-decoration-none" data-bs-toggle="modal" data-bs-target="#deleteModal">
@@ -21,10 +21,10 @@
                                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                 </div>
                                 <div class="modal-body">
-                                    @lang('app.delete-question', ['name' => $outfitseller->outfit->name()])
+                                    @lang('app.delete-question', ['name' => $outfit->name()])
                                 </div>
                                 <div class="modal-footer">
-                                    <form action="{{ route('admin.outfit.delete', [$outfitseller->outfit->id, $outfitseller->seller_id]) }}" method="post">
+                                    <form action="{{ route('admin.outfit.delete', [$outfit->id, $outfit->seller_id]) }}" method="post">
                                         @csrf
                                         @method('DELETE')
                                         <button type="button" class="btn btn-light" data-bs-dismiss="modal">@lang('app.cancel')</button>
@@ -43,7 +43,7 @@
         <div class="row g-3">
             <div class="col-sm-6 col-lg-4">
                 <div class="position-relative d-flex justify-content-center align-items-center">
-                    <img src="{{ $outfitseller->outfit->image() }}" alt="" class="img-fluid border rounded">
+                    <img src="{{ $outfit->image() }}" alt="" class="img-fluid border rounded">
                 </div>
             </div>
 
@@ -52,53 +52,53 @@
 
             <div class="col">
                 <div class="d-block h2 fw-bold mb-3">
-                    {{ $outfitseller->outfit->name() }}
-                    <p>@lang('app.Price') {{ $outfitseller->price}} </p>
+                    {{ $outfit->name() }}
+                    <p>@lang('app.Price') {{ $outfit->price}} </p>
                 </div>
-                <p>@lang('app.description'):{{ $outfitseller->description() }}</p>
-                <p>@lang('app.year_or_size'):{{ $outfitseller->outfit->age->name() }}</p>
+                <p>@lang('app.description'):{{ $outfit->description() }}</p>
+                <p>@lang('app.year_or_size'):{{ $outfit->age->name() }}</p>
                 <a href="#" class="d-block h5 fw-bold link-secondary mb-3">
-                    @lang('app.Seller'): {{ $outfitseller->seller->name }}
+                    @lang('app.Seller'): {{ $outfit->seller->name }}
                 </a>
-                <p>@lang('app.Company'):{{ $outfitseller->seller->company_name }}</p>
-                <p>@lang('app.Phone'): {{ $outfitseller->seller->phone }}</p>
-                <p>@lang('app.Shop Place'):{{ $outfitseller->seller->location->name() }}</p>
-                @foreach($outfitseller->outfit->tags as $tag)
+                <p>@lang('app.Company'):{{ $outfit->seller->company_name }}</p>
+                <p>@lang('app.Phone'): {{ $outfit->seller->phone }}</p>
+                <p>@lang('app.Shop Place'):{{ $outfit->seller->location->name() }}</p>
+                @foreach($outfit->tags as $tag)
                     <a href="{{route('results', ['t'=>$tag->id])}}" class="d-block h5 fw-bold link-secondary mb-3">
                         <span>{{ $tag->name()}}</span>
                     </a>
                 @endforeach
-                @foreach($outfitseller->outfit->values as $value)
+                @foreach($outfit->values as $value)
                     <a href="#" class="d-block h5 fw-bold link-secondary mb-3">
                         <span>{{ $value->name_en}}</span>
                     </a>
                 @endforeach
 
                 <div class="h5 fw-bold mb-3">
-                    {{-- @if($outfitseller->isDiscount())
-                        <span class="text-secondary"><s>{{ number_format($outfitseller->price, 2, ".", " ") }}</s></span>
-                        <span class="text-danger">{{ number_format($outfitseller->price(), 2, ".", " ") }} <small>TMT</small></span>
+                    {{-- @if($outfit->isDiscount())
+                        <span class="text-secondary"><s>{{ number_format($outfit->price, 2, ".", " ") }}</s></span>
+                        <span class="text-danger">{{ number_format($outfit->price(), 2, ".", " ") }} <small>TMT</small></span>
                     @else
-                        <span class="text-primary">{{ number_format($outfitseller->price, 2, ".", " ") }} <small>TMT</small></span>
+                        <span class="text-primary">{{ number_format($outfit->price, 2, ".", " ") }} <small>TMT</small></span>
                     @endif --}}
-                    @if($outfitseller->credit)
+                    @if($outfit->credit)
                         <i class="bi bi-patch-check-fill text-info"></i>
                     @endif
                 </div>
                 <div class="d-flex align-items-center fw-bold mb-3">
                     <div class="me-4">
-                        <i class="bi bi-basket-fill text-black-50"></i> {{ $outfitseller->sold }}
+                        <i class="bi bi-basket-fill text-black-50"></i> {{ $outfit->sold }}
                     </div>
                     <div class="me-4">
-                        <i class="bi bi-binoculars-fill text-black-50"></i> {{ $outfitseller->outfit->viewed }}
+                        <i class="bi bi-binoculars-fill text-black-50"></i> {{ $outfit->viewed }}
                     </div>
                     <a href="#" class="btn btn-danger btn-sm text-decoration-none">
-                        <i class="bi bi-heart-fill"></i> {{ $outfitseller->outfit->liked }}
+                        <i class="bi bi-heart-fill"></i> {{ $outfit->liked }}
                     </a>
                 </div>
-                @if($outfitseller->description)
+                @if($outfit->description)
                     <div class="mb-3">
-                        {!! $outfitseller->description !!}
+                        {!! $outfit->description !!}
                     </div>
                 @endif
 
@@ -112,8 +112,8 @@
             </div>
             <div class="row row-cols-2 row-cols-sm-3 row-cols-md-4 row-cols-lg-5 row-cols-xl-6 g-3">
                 @foreach($outfits as $outfit)
-                    @foreach($outfit->outfitsellers as $item)
-                    @if($item->seller_id == $outfitseller->seller_id)
+                    @foreach($outfits as $item)
+                    @if($item->seller_id == $outfit->seller_id)
 
                     @else 
                         <div class="col">

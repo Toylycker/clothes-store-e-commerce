@@ -9,26 +9,6 @@
                 <li class="nav-item">
                     <a class="nav-link fw-bold" href="{{ route('outfits.home') }}">@lang('app.clothes')</a>
                 </li>
-                <li class="nav-item dropdown">
-                    <a class="nav-link fw-bold dropdown-toggle" href="#" id="dropdown01" data-bs-toggle="dropdown" aria-expanded="false">@lang('app.year_or_size')</a>
-                    
-                    <ul class="dropdown-menu" aria-labelledby="dropdown01">
-                        @foreach($ages as $age)
-                            <li>
-                                <a class="dropdown-item" href="{{route('results', ['a'=>$age->id])}}">
-                                <span class="badge bg-light text-dark">{{$age->name()}}</span>
-                                </a>
-                            </li>
-                        @endforeach
-
-                    </ul>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link fw-bold" href="{{ route('about') }}">@lang('app.about-us')</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link fw-bold" href="{{ route('contact') }}">@lang('app.contact')</a>
-                </li>
                 <li class="nav-item">
                     <a class="nav-link fw-bold" href="{{ route('basket') }}">
                         <i class="bi bi-bag-heart-fill"></i> @lang('app.basket')

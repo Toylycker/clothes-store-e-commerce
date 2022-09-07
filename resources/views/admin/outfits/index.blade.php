@@ -104,7 +104,7 @@
                     <td>{{ $outfit->created_at->format('Y-m-d H:i:s') }}</td>
                     <td>{{ $outfit->updated_at->format('Y-m-d H:i:s') }}</td>
                     <td><div>
-                        <a href="{{route('admin.outfit.show', [$outfit->id, $outfit->outfitsellers[0]->seller_id])}}" class="btn btn-success btn-sm">for edit or delete</i></a>
+                        <a href="{{route('admin.outfit.show', [$outfit->id, $outfit->outfits[0]->seller_id])}}" class="btn btn-success btn-sm">for edit or delete</i></a>
                     </div></td>
                     {{-- <td>
                         <div>

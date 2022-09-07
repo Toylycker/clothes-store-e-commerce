@@ -1,54 +1,54 @@
 @extends('front.layouts.app')
 @section('content')
-        @if($outfitsellers->count() > 0)
+        @if($outfits->count() > 0)
 
-            @foreach($outfitsellers as $outfitseller)
+            @foreach($outfits as $outfit)
             <div class="container-sm py-3">
                 <div class="d-flex justify-content-between align-items-center border-bottom py-2 mb-3">
-                    <a href="{{ route('outfit.show', [ $outfitseller->outfit->id, $outfitseller->seller->id]) }}" class="position-relative d-flex justify-content-start align-items-center">
-                        <div class="h4 text-danger">{{ $outfitseller->outfit->name }}</div>
+                    <a href="{{ route('outfit.show', [ $outfit->id, $outfit->seller->id]) }}" class="position-relative d-flex justify-content-start align-items-center">
+                        <div class="h4 text-danger">{{ $outfit->name }}</div>
                     </a>
                 </div>
                 <div class="row g-3">
                     <div class="col-lg-2 col-sm-4 col-md-4">
                         <div class="position-relative d-flex justify-content-center align-items-center">
-                            <a href="{{ route('outfit.show', [ $outfitseller->outfit->id, $outfitseller->seller->id]) }}" class="position-relative d-flex justify-content-center align-items-center">
-                            <img src="{{ $outfitseller->outfit->image() }}" alt="" class="img-fluid border rounded">
+                            <a href="{{ route('outfit.show', [ $outfit->id, $outfit->seller->id]) }}" class="position-relative d-flex justify-content-center align-items-center">
+                            <img src="{{ $outfit->image() }}" alt="" class="img-fluid border rounded">
                             </a>
                         </div>
                     </div>
                     <div class="col-9 col-sm-7 col-md-7">
                         <div class="h5 fw-bold mb-3">
-                            <p @disabled(true) class="d-none">{{$total_price += $outfitseller->price}}</p>
-                            <p>{{$outfitseller->price}}</p>
-                            <p>{{$outfitseller->description()}}</p>
-                            @foreach ($outfitseller->outfit->tags as $tag)
+                            <p @disabled(true) class="d-none">{{$total_price += $outfit->price}}</p>
+                            <p>{{$outfit->price}}</p>
+                            <p>{{$outfit->description()}}</p>
+                            @foreach ($outfit->tags as $tag)
                                 <span>{{$tag->name(). '/'}} </span>
                             @endforeach
-                            @if($outfitseller->outfit->credit)
+                            @if($outfit->credit)
                                 <i class="bi bi-patch-check-fill text-info"></i>
                             @endif
                         </div>
                         <div class="d-flex align-items-center fw-bold mb-3">
                             <div class="me-4">
-                                <i class="bi bi-basket-fill text-black-50"></i> {{ $outfitseller->outfit->sold }}
+                                <i class="bi bi-basket-fill text-black-50"></i> {{ $outfit->sold }}
                             </div>
                             <div class="me-4">
-                                <i class="bi bi-binoculars-fill text-black-50"></i> {{ $outfitseller->outfit->viewed }}
+                                <i class="bi bi-binoculars-fill text-black-50"></i> {{ $outfit->viewed }}
                             </div>
                             <a href="#" class="btn btn-danger btn-sm text-decoration-none">
-                                <i class="bi bi-heart-fill"></i> {{ $outfitseller->outfit->favorited }}
+                                <i class="bi bi-heart-fill"></i> {{ $outfit->favorited }}
                             </a>
                         </div>
                     </div>
 
                     <div class="col-1">
-                        <a href="{{ route('add_to_basket', $outfitseller->id) }}">
-                            @if (!in_array($outfitseller->id, $basket))
+                        <a href="{{ route('add_to_basket', $outfit->id) }}">
+                            @if (!in_array($outfit->id, $basket))
                                 <div class="d-grid gap-2">
                                     <button type="button" class="btn btn-success"><i class="bi bi-plus-square-fill"></i></button>
                                 </div>
-                            @elseif(in_array($outfitseller->id, $basket))
+                            @elseif(in_array($outfit->id, $basket))
                                 <div class="d-grid gap-2">
                                     <button type="button" class="btn btn-lg btn-danger"><i class="bi bi-dash-square"></i></button>
                                 </div>
@@ -59,7 +59,7 @@
             </div>
             @endforeach
             <div class="my-3">
-                {{ $outfitsellers->links() }}
+                {{ $outfits->links() }}
             </div>
 
 

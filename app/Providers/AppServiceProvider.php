@@ -39,18 +39,13 @@ class AppServiceProvider extends ServiceProvider
 
 
         View::composer('front.app.navbar', function ($view) {
-            $ages = Age::withCount(['outfits'])
-                ->orderBy('id')
-                ->get();
-                $new_orders = 0;
-
+            $new_orders = 0;
             if (Auth::user()) {
                 $new_orders = Auth::user()->unreadNotifications->count();
             }
 
             return $view->with([
-                'ages' => $ages,
-                'new_orders' => $new_orders ?:0
+                'new_orders' => $new_orders
             ]);
         });
 
