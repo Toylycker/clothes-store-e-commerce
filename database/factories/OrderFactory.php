@@ -26,11 +26,11 @@ class OrderFactory extends Factory
        })->afterCreating(function (Order $order) {
            $rand = rand(1, 5);
             for ($i=0; $i < $rand; $i++) { 
-                $outfit = Outfit::inRandomOrder()->with('age')->first();
+                $outfit = Outfit::inRandomOrder()->with('ages')->first();
                 $detail = new OrderItem();
                 $detail->order_id = $order->id;
                 $detail->outfit_id = $outfit->id;
-                $detail->age_id = $outfit->age->id;
+                $detail->age_id = $outfit->ages->first()->id;
                 $detail->quantity = rand(1, 5);
                 $detail->discount = rand(1, 5);
                 $detail->save();

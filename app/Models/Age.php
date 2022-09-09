@@ -15,11 +15,6 @@ class Age extends Model
 
     protected $hidden = ['pivot'];
 
-    public function outfits()
-    {
-        return $this->hasMany(Outfit::class);
-    }
-
     public function name()
     {
         if (app()->isLocale('en')) {
@@ -36,5 +31,10 @@ class Age extends Model
         } else {
             return $this->description;
         }
+    }
+
+    public function outfits()
+    {
+        return $this->belongsToMany(Outfit::class, 'outfit_ages')->withPivot('quantity');
     }
 }

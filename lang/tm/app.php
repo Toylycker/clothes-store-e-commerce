@@ -18,6 +18,7 @@ return [
     'order' => 'zakaz',
     'orders' => 'Zakazlar',
     'my_orders' => 'Meniň zakazlarym',
+    'money'=> 'man',
 
     'outfits' => "Eşikler",
     'ages' => "ýaş we rezmer",

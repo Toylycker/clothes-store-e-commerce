@@ -13,13 +13,13 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('outfit_values', function (Blueprint $table) {
+        Schema::create('outfit_ages', function (Blueprint $table) {
             $table->unsignedBigInteger('outfit_id');
             $table->foreign('outfit_id')->references('id')->on('outfits')->cascadeOnDelete();
-            $table->unsignedBigInteger('value_id');
-            $table->foreign('value_id')->references('id')->on('values')->cascadeOnDelete();
-            $table->primary(['outfit_id', 'value_id']);
-            $table->Integer('quantity')->default(1);//quantity of product that seller has.
+            $table->unsignedBigInteger('age_id');
+            $table->foreign('age_id')->references('id')->on('ages');
+            $table->Integer('quantity');
+            $table->primary(['outfit_id', 'age_id']);
         });
     }
 
@@ -30,6 +30,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('outfit_values');
+        Schema::dropIfExists('outfit_ages');
     }
 };

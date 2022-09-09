@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Option extends Model
 {
@@ -14,6 +15,11 @@ class Option extends Model
     public $timestamps = false;
 
     protected $hidden = ['pivot'];
+
+    public function categories(): BelongsToMany
+    {
+        return $this->belongsToMany(category::class, 'category_options');
+    }
 
 
     public function values()

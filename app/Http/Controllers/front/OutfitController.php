@@ -61,7 +61,9 @@ class OutfitController extends Controller
             return $query->where('search', 'like', '%' . $search . '%');
         })
         ->when($f_ages, function ($query) use ($f_ages){
-            return $query->whereIn('age_id', $f_ages);
+            return $query->whereHas('ages', function ($query) use ($f_ages){
+                $query->whereIn('id', $f_ages);
+            });
         })
         ->when($f_values, function ($query, $f_values) {
             return $query->where(function ($query1) use ($f_values) {

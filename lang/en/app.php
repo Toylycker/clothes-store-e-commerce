@@ -23,6 +23,7 @@ return [
     'Suits' => 'Suits',
     'Dresses' => 'Dresses',
     't_shirts' =>"T-shirts",
+    'money'=> 'man',
 
 
     'outfits' => "Outfits",

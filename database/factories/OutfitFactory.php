@@ -32,6 +32,7 @@ class OutfitFactory extends Factory
            //
        })->afterCreating(function (Outfit $outfit) {
             $outfit->tags()->sync(Tag::inRandomOrder()->take(rand(1, 5))->pluck('id'));
+            $outfit->ages()->syncWithPivotValues(Age::inRandomOrder()->take(rand(1, 3))->pluck('id'), ['quantity'=>2]);
 
            $name = [];
            $name_en = [];
@@ -73,9 +74,6 @@ class OutfitFactory extends Factory
 
                 $outfit->update();       
             
-            $agestring = Outfit::where('id', $outfit->id)->with("age")->get();
-            $agestring = $agestring[0]['age']['name'];
-            $search[] = $agestring;
             $search[] = Str::slug($outfit->name_en);
             $search[] = Str::slug($outfit->name);
             foreach($outfit->tags as $tag){
@@ -103,10 +101,9 @@ class OutfitFactory extends Factory
      * @return array<string, mixed>
      */
     public function definition()
-    {   $age = Age::inRandomOrder()->first();
+    {
         $createdAt = $this->faker->dateTimeBetween($startDate = '-3 months', $endDate = 'now');
         return [
-            'age_id'=> $age->id,
             'name' => null,
             'name_en' => 'null',
             'slug' => "null",

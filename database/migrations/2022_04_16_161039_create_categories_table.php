@@ -13,11 +13,11 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('values', function (Blueprint $table) {
+        Schema::create('categories', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('option_id')->index();
-            $table->foreign('option_id')->references('id')->on('options')->cascadeOnDelete();
-            $table->string('name');
+            $table->unsignedBigInteger('category_id')->index()->nullable();
+            $table->foreign('category_id')->references('id')->on('categories')->cascadeOnDelete();
+            $table->string('name')->unique();
             $table->string('name_en');
             $table->unsignedInteger('sort_order')->default(1);
         });
@@ -30,6 +30,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('values');
+        Schema::dropIfExists('categories');
     }
 };
