@@ -21,7 +21,7 @@ class SellerFactory extends Factory
     {
         return [
             'location_id' => Location::inRandomOrder()->first(),
-            'user_id' => $this->faker->unique()->numberBetween($min = 2, $max = 100),
+            'user_id' => $this->faker->unique()->numberBetween($min = 2, $max = 10),
             'name' => $this->faker->unique()->name(),
             'last_name' => $this->faker->unique()->lastName(),
             'phone' => '86' . rand(2000000, 5999999),

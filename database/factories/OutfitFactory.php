@@ -7,6 +7,7 @@ use App\Models\Location;
 use App\Models\Seller;
 use App\Models\Tag;
 use App\Models\Age;
+use App\Models\Category;
 use App\Models\Outfit;
 use App\Models\Option;
 use App\Models\Value;
@@ -20,6 +21,20 @@ use Illuminate\Support\Str;
  */
 class OutfitFactory extends Factory
 {   
+
+    public static function attachCategories(Category $category, Outfit $outfit){
+        // echo($category->name);
+        // echo($outfit->name );
+
+        $outfit->categories()->attach($category->id);
+        echo($category->name . 'attached------>');
+        $outfit->update();
+        if (($category->children->count()>0)) {
+            $justOneChild = $category->children()->inRandomOrder()->first();
+            echo('chosen->'. $justOneChild->name);
+            OutfitFactory::attachCategories($justOneChild, $outfit);
+        }
+    }
     
     /**
     * Configure the model factory.
@@ -33,6 +48,13 @@ class OutfitFactory extends Factory
        })->afterCreating(function (Outfit $outfit) {
             $outfit->tags()->sync(Tag::inRandomOrder()->take(rand(1, 5))->pluck('id'));
             $outfit->ages()->syncWithPivotValues(Age::inRandomOrder()->take(rand(1, 3))->pluck('id'), ['quantity'=>2]);
+            echo('----------------------choosing category------------------------');
+
+            $category = Category::where('category_id', null)->inRandomOrder()->with('children')->first();// i need attach product to all categories that goes down from parent. So i am grabbing the highest parent and starting attaching it from parent to children taking only one child in each.
+            echo('----------------------chose the category------------------------');
+            
+            OutfitFactory::attachCategories($category, $outfit);
+
 
            $name = [];
            $name_en = [];
@@ -41,7 +63,12 @@ class OutfitFactory extends Factory
            $values = [];
            $search = [];
 
-           $options = Option::with(['values'])
+           $options = Option::whereHas('categories', function ($query) use ($outfit){
+            $query->doesntHave('children')->whereHas('outfits', function ($query) use ($outfit){
+                $query->where('id', $outfit->id);
+            });
+           })
+           ->with(['values'])
                ->orderBy('sort_order')
                ->orderBy('name')
                ->get();

@@ -19,6 +19,7 @@ return new class extends Migration
             $table->unsignedBigInteger('value_id');
             $table->foreign('value_id')->references('id')->on('values')->cascadeOnDelete();
             $table->primary(['outfit_id', 'value_id']);
+            $table->Integer('sort_order')->nullable();
             $table->Integer('quantity')->default(1);//quantity of product that seller has.
         });
     }
