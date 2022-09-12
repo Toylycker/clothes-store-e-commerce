@@ -41,6 +41,7 @@ Route::get('/check', [OutfitController::class, 'check'])->name('check');
 
 Route::get('/results', [HomeController::class, 'results'])->name('results');
 Route::get('/language/{key}', [HomeController::class, 'language'])->name('language')->where('key', '[a-z]+');
+Route::get('/categories', [HomeController::class, 'categories'])->name('categories');
 
 Route::middleware('auth')->controller(SellerController::class)->name('seller.')->prefix('seller')->group(function () {
     Route::get('/register', 'create')->name('register');

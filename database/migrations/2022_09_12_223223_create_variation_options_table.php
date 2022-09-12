@@ -13,9 +13,11 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('ages', function (Blueprint $table) {
+        Schema::create('variation_options', function (Blueprint $table) {
             $table->id();
-            $table->string('name')->unique();
+            $table->unsignedBigInteger('variation_id')->index();
+            $table->foreign('variation_id')->references('id')->on('variations')->cascadeOnDelete();
+            $table->string('option');
         });
     }
 
@@ -26,6 +28,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('ages');
+        Schema::dropIfExists('variation_options');
     }
 };

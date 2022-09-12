@@ -15,6 +15,11 @@
                         <span class="badge bg-secondary">{{count($basket)}}</span>
                     </a>
                 </li>
+                <li class="nav-item">
+                    <a class="nav-link fw-bold" href="{{ route('categories') }}">
+                        categories
+                    </a>
+                </li>
                 @auth
                 @endauth
                     <li class="nav-item">

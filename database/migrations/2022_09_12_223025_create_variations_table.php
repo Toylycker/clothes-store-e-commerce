@@ -13,13 +13,12 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('outfit_ages', function (Blueprint $table) {
-            $table->unsignedBigInteger('outfit_id');
+        Schema::create('variations', function (Blueprint $table) {
+            $table->id();
+            $table->unsignedBigInteger('outfit_id')->index();
             $table->foreign('outfit_id')->references('id')->on('outfits')->cascadeOnDelete();
-            $table->unsignedBigInteger('age_id');
-            $table->foreign('age_id')->references('id')->on('ages');
-            $table->Integer('quantity');
-            $table->primary(['outfit_id', 'age_id']);
+            $table->string('name');
+            $table->timestamps();
         });
     }
 
@@ -30,6 +29,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('outfit_ages');
+        Schema::dropIfExists('variations');
     }
 };

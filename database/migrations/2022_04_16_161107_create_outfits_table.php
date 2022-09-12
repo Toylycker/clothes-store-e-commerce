@@ -28,14 +28,6 @@ return new class extends Migration
             $table->timestamps();
             $table->text('description')->nullable();
             $table->text('description_en')->nullable();
-            $table->unsignedFloat('price')->default(0);
-            $table->unsignedInteger('stock')->default(0);
-            $table->unsignedInteger('discount_percent')->default(0);
-            $table->dateTime('discount_datetime_start')->useCurrent();
-            $table->dateTime('discount_datetime_end')->useCurrent();
-            $table->boolean('credit')->default(0);
-            $table->unsignedInteger('sold')->default(0);
-            $table->boolean('purchase_way')->default(0);//stock>0?w nalichi:na zakaz;
         });
     }
 

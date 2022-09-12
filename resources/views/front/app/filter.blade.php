@@ -1,6 +1,6 @@
 <form action="{{ url()->current() }}" method="get">
 
-        <div class="accordion-item">
+        {{-- <div class="accordion-item">
             <h2 class="accordion-header" id="panelsStayOpen-heading-c">
                 <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapse-c" aria-expanded="true" aria-controls="panelsStayOpen-collapse-c">
                     @lang('app.ages')
@@ -17,7 +17,7 @@
                     @endforeach
                 </div>
             </div>
-        </div>
+        </div> --}}
         
         @foreach($options as $option)
             <div class="accordion-item">
