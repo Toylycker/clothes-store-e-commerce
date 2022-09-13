@@ -14,11 +14,11 @@ return new class extends Migration
     public function up()
     {
         Schema::create('product_configurations', function (Blueprint $table) {
-            $table->unsignedBigInteger('variation_option_id')->index();
-            $table->foreign('variation_option_id')->references('id')->on('variation_options')->cascadeOnDelete();
-            $table->unsignedBigInteger('product_item_id')->index();
-            $table->foreign('product_item_id')->references('id')->on('product_items')->cascadeOnDelete();
-            $table->primary(['variation_option_id', 'product_item_id']);
+            $table->unsignedBigInteger('va_op_id')->index();
+            $table->foreign('va_op_id')->references('id')->on('variation_options')->cascadeOnDelete();
+            $table->unsignedBigInteger('ou_it_id')->index();
+            $table->foreign('ou_it_id')->references('id')->on('outfit_items')->cascadeOnDelete();
+            $table->primary(['va_op_id', 'ou_it_id']);
         });
     }
 

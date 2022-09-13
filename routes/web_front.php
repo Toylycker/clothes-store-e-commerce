@@ -57,6 +57,7 @@ Route::middleware(['auth', 'seller'])->controller(SellerController::class)->name
 
 Route::controller(OutfitController::class)->group(function () {
     Route::get('/outfits/home', 'index')->name('outfits.home');
+    Route::get('/outfits/home/variations', 'variation_choosing')->name('variationchoosing');
     Route::get('/outfit/{outfit_id}/show', 'show')->name('outfit.show');
     Route::get('/outfit/{slug}/favorite', 'favorite')->name('computer.favorite')->where('slug', '[0-9A-Za-z-]+');
     Route::get('/outfit/{slug}/busket', 'busket')->name('computer.busket')->where('slug', '[0-9A-Za-z-]+');

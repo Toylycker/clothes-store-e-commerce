@@ -10,6 +10,7 @@ use App\Models\Age;
 use App\Models\Tag;
 use App\Models\Comment;
 use App\Models\Image;
+use App\Models\OutfitItem;
 use Illuminate\Support\Str;
 use App\Models\Seller;
 use Illuminate\Validation\Rule;
@@ -35,35 +36,13 @@ class OutfitController extends Controller
             'd' => 'nullable|boolean', // discount => d
             'n' => 'nullable|boolean', // new => n
             't' => 'nullable|boolean', // credit => t
-            'ages' => 'nullable|array',
         ]);
 
         $search = $request->q ?: null;
         $f_values = $request->has('v') ? $request->v : [];
-        $f_ages = $request->has('ages') ? $request->ages : [];
         $options = Option::with('values')->OrderBy('sort_order')->get();
-        $ages = Age::get();
-
-        $pants  = $search==null && $f_values==null && $f_ages ==null?Outfit::with('values', 'tags', 'seller')->whereHas('values', function ($query) {
-            $query->where('id', '19');})->take(6)->get():null;
-        $jeansies  = $search==null && $f_values==null && $f_ages ==null?Outfit::with('values', 'tags', 'seller')->whereHas('values', function ($query) {
-            $query->where('id', '24');})->take(6)->get():null;
-        $dresses  = $search==null && $f_values==null && $f_ages ==null?Outfit::with('values', 'tags', 'seller')->whereHas('values', function ($query) {
-            $query->where('id', '23');})->take(6)->get():null;
-        $jumpers  = $search==null && $f_values==null && $f_ages ==null ?Outfit::with('values', 'tags', 'seller')->whereHas('values', function ($query) {
-            $query->where('id', '27');})->take(6)->get():null;
-        $suits  = $search==null && $f_values==null && $f_ages ==null?Outfit::with('values', 'tags', 'seller')->whereHas('values', function ($query) {
-                $query->where('id', '30');})->take(6)->get():null;
-        $t_shirts  = $search==null && $f_values==null && $f_ages ==null?Outfit::with('values', 'tags', 'seller')->whereHas('values', function ($query) {
-            $query->where('id', '20');})->take(6)->get():null;
-
-        $outfits = $pants?0:Outfit::when($search, function ($query) use($search){
+        $outfits = Outfit::when($search, function ($query) use($search){
             return $query->where('search', 'like', '%' . $search . '%');
-        })
-        ->when($f_ages, function ($query) use ($f_ages){
-            return $query->whereHas('ages', function ($query) use ($f_ages){
-                $query->whereIn('id', $f_ages);
-            });
         })
         ->when($f_values, function ($query, $f_values) {
             return $query->where(function ($query1) use ($f_values) {
@@ -73,31 +52,26 @@ class OutfitController extends Controller
                     });
                 }
             });
-        })->with('values', 'tags', 'seller')->inRandomOrder()->paginate(54,["*"], 'page')
+        })->with('values', 'tags', 'seller', 'outfit_items', 'variations.variation_options')->inRandomOrder()->paginate(14,["*"], 'page')
         ->withQueryString();
+        // return $outfits;
                 return view('front.outfits.index', [
                     'options' => $options,
-                    "pants" => $pants,
-                    "jinsies" => $jeansies,
-                    "dresses" => $dresses,
-                    "jumpers" => $jumpers,
-                    "suits" => $suits,
-                    "t_shirts" => $t_shirts,
                     "outfits" => $outfits,
                     "search" => $search,
                     "f_values" => collect($f_values)->collapse(),
-                    'f_ages' => collect($f_ages),
-                    'ages' =>$ages
                 ]);
     }
 
+    function variation_choosing(Request $request){
+        $productitems = OutfitItem::where('outfit_id', $request->outfit_id)->whereHas('variation_options', function ($query) use ($request){
+            $query->where('id', $request->option_id);
+        })->with('variation_options.variation')->get();
+        return $productitems;
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\Outfit  $outfit
-     * @return \Illuminate\Http\Response
-     */
+    }
+
+
     public function show( $outfit_id){
         $outfit = Outfit::where('id', $outfit_id)
         ->with('seller','values.option', 'tags')->first();

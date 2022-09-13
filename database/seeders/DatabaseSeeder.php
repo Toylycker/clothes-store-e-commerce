@@ -18,7 +18,6 @@ class DatabaseSeeder extends Seeder
             LocationSeeder::class,
             TagSeeder::class,
             UserSeeder::class,
-            AgeSeeder::class,
             OptionValueSeeder::class,
             CategorySeeder::class,
         ]);

@@ -30,103 +30,6 @@
   </div>
 
         <div class="container-fluid">
-            @if($pants!=null)
-            <div class="container-xxl py-3">
-                <div class="d-flex justify-content-between align-items-center border-bottom py-2 mb-3">
-                    <span class="d-block h4 mb-0 text-danger">@lang('app.Pants')</span>
-                    <span class="d-block"><i class="bi bi-chevron-right"></i></span>
-                </div>
-                <div class="row row-cols-2 row-cols-sm-3 row-cols-md-4 row-cols-lg-5 row-cols-xl-6 g-3">
-                    @foreach($pants as $outfit)
-                        <div class="col">
-                            @include('front.app.outfit')
-                        </div>
-                    @endforeach
-                </div>
-            </div>
-            @endif
-
-            @if($jinsies!=null)
-            <div class="container-xxl py-3">
-                <div class="d-flex justify-content-between align-items-center border-bottom py-2 mb-3">
-                    <span class="d-block h4 mb-0 text-danger">@lang('app.Jeansies')</span>
-                    <span class="d-block"><i class="bi bi-chevron-right"></i></span>
-                </div>
-                <div class="row row-cols-2 row-cols-sm-3 row-cols-md-4 row-cols-lg-5 row-cols-xl-6 g-3">
-                    @foreach($jinsies as $outfit)
-                        <div class="col">
-                            @include('front.app.outfit')
-                        </div>
-                    @endforeach
-                </div>
-            </div>
-            @endif
-
-            @if($dresses!=null)
-            <div class="container-xxl py-3">
-                <div class="d-flex justify-content-between align-items-center border-bottom py-2 mb-3">
-                    <span class="d-block h4 mb-0 text-danger">@lang('app.Dresses')</span>
-                    <span class="d-block"><i class="bi bi-chevron-right"></i></span>
-                </div>
-                <div class="row row-cols-2 row-cols-sm-3 row-cols-md-4 row-cols-lg-5 row-cols-xl-6 g-3">
-                    @foreach($dresses as $outfit)
-                        <div class="col">
-                            @include('front.app.outfit')
-                        </div>
-                    @endforeach
-                </div>
-            </div>
-            @endif
-
-            @if($jumpers!=null)
-            <div class="container-xxl py-3">
-                <div class="d-flex justify-content-between align-items-center border-bottom py-2 mb-3">
-                    <span class="d-block h4 mb-0 text-danger">@lang('app.Jumpers')</span>
-                    <span class="d-block"><i class="bi bi-chevron-right"></i></span>
-                </div>
-                <div class="row row-cols-2 row-cols-sm-3 row-cols-md-4 row-cols-lg-5 row-cols-xl-6 g-3">
-                    @foreach($jumpers as $outfit)
-                        <div class="col">
-                            @include('front.app.outfit')
-                        </div>
-                    @endforeach
-                </div>
-            </div>
-            @endif
-
-            @if($suits!=null)
-            <div class="container-xxl py-3">
-                <div class="d-flex justify-content-between align-items-center border-bottom py-2 mb-3">
-                    <span class="d-block h4 mb-0 text-danger">@lang('app.Suits')</span>
-                    <span class="d-block"><i class="bi bi-chevron-right"></i></span>
-                </div>
-                <div class="row row-cols-2 row-cols-sm-3 row-cols-md-4 row-cols-lg-5 row-cols-xl-6 g-3">
-                    @foreach($suits as $outfit)
-                        <div class="col">
-                            @include('front.app.outfit')
-                        </div>
-                    @endforeach
-                </div>
-            </div>
-            @endif
-
-            @if($t_shirts!=null)
-            <div class="container-xxl py-3">
-                <div class="d-flex justify-content-between align-items-center border-bottom py-2 mb-3">
-                    <span class="d-block h4 mb-0 text-danger">@lang('app.t_shirts')</span>
-                    <span class="d-block"><i class="bi bi-chevron-right"></i></span>
-                </div>
-                <div class="row row-cols-2 row-cols-sm-3 row-cols-md-4 row-cols-lg-5 row-cols-xl-6 g-3">
-                    @foreach($t_shirts as $outfit)
-                        <div class="col">
-                            @include('front.app.outfit')
-                        </div>
-                    @endforeach
-                </div>
-            </div>
-            @endif
-
-            @if($outfits!=null)
             <div class="container-xxl py-3">
                 <div class="d-flex justify-content-between align-items-center border-bottom py-2 mb-3">
                     <span class="d-block h4 mb-0 text-danger">{{$search}}</span>
@@ -141,7 +44,6 @@
                 </div>
                 {{ $outfits->links() }}
             </div>
-            @endif
         
         </div>
 </div>

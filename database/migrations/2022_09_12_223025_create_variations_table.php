@@ -18,7 +18,6 @@ return new class extends Migration
             $table->unsignedBigInteger('outfit_id')->index();
             $table->foreign('outfit_id')->references('id')->on('outfits')->cascadeOnDelete();
             $table->string('name');
-            $table->timestamps();
         });
     }
 

@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Facades\Storage;
 
 
@@ -25,6 +26,16 @@ class Outfit extends Model
     public function values()
     {
         return $this->belongsToMany(Value::class, 'outfit_values')->withPivot('quantity') ;
+    }
+
+    public function variations(): HasMany
+    {
+        return $this->hasMany(Variation::class);
+    }
+
+    public function outfit_items(): HasMany
+    {
+        return $this->hasMany(outfitItem::class);
     }
 
     public function seller()
