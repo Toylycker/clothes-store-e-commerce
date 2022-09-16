@@ -13,10 +13,14 @@ use App\Models\Image;
 use App\Models\OutfitItem;
 use Illuminate\Support\Str;
 use App\Models\Seller;
+use App\Models\Variation;
+use App\Models\VariationOption;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\Facades\Storage;
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Auth;
 
 class OutfitController extends Controller
@@ -52,7 +56,7 @@ class OutfitController extends Controller
                     });
                 }
             });
-        })->with('values', 'tags', 'seller', 'outfit_items', 'variations.variation_options')->inRandomOrder()->paginate(14,["*"], 'page')
+        })->with('values', 'tags', 'seller')->inRandomOrder()->paginate(14,["*"], 'page')
         ->withQueryString();
         // return $outfits;
                 return view('front.outfits.index', [
@@ -63,23 +67,115 @@ class OutfitController extends Controller
                 ]);
     }
 
-    function variation_choosing(Request $request){
-        $productitems = OutfitItem::where('outfit_id', $request->outfit_id)->whereHas('variation_options', function ($query) use ($request){
-            $query->where('id', $request->option_id);
-        })->with('variation_options.variation')->get();
-        return $productitems;
+    function variation_choosing(Request $request){//instead of ids, there should be request->options which contains list og options. one from each variation
+        $r_option0 = $request->option0?:null;
+        $r_option1 = $request->option1?:null;
+        $r_option2 = $request->option2?:null;
+        $outfititems = OutfitItem::when($r_option0,function ($query) use ($r_option0){
+            $query->whereHas('variation_options', function ($query) use ($r_option0){
+                    $query->where('id', $r_option0);
+
+            });
+        })->when($r_option1,function ($query) use ($r_option1){
+            $query->whereHas('variation_options', function ($query) use ($r_option1){
+                    $query->where('id', $r_option1);
+
+            });
+        })->when($r_option2,function ($query) use ($r_option2){
+            $query->whereHas('variation_options', function ($query) use ($r_option2){
+                    $query->where('id', $r_option2);
+
+            });
+        })
+        ->with(['variation_options'])->get()->map(function ($option) {
+            $options=[];
+            foreach ($option->variation_options as $value) {
+                    array_push($options, $value->id);
+
+            }
+            return $options;
+        });
+
+        $flattened = Arr::flatten($outfititems);
+        $flattened = array_unique($flattened);
+
+        return $flattened;
+
+        $outfititemswithalloptions = OutfitItem::whereHas('variation_options', function ($query) use ($flattened){
+            $query->whereIn('id', $flattened);
+        })
+        ->with('variation_options')
+        ->get()
+        ->map(function ($option) {
+            $ooptions=[];
+            foreach ($option->variation_options as $value2) {
+                array_push($ooptions, $value2->option);
+            }
+            return $ooptions;
+        });
+        $ready = Arr::flatten($outfititemswithalloptions);
+        return $ready;
+
+        return redirect()->back()->with(['needyOptions'=>$ready]);
+    }
+
+    function variations(Request $request){
+        $variations = Variation::where('outfit_id', $request->outfit_id)->with('variation_options.outfit_items')->get();
+
+        return response()->json($variations);
 
     }
 
 
-    public function show( $outfit_id){
+    public function show( $outfit_id, Request $request){
         $outfit = Outfit::where('id', $outfit_id)
-        ->with('seller','values.option', 'tags')->first();
+        ->with('seller','values.option', 'tags', 'outfit_items.variation_options')->first();
         $comments = Comment::where('outfit_id', $outfit->id)->get();
+        $variations = Variation::where('outfit_id', $outfit_id)->with('variation_options.outfit_items')->get();
+        if($request){
+        $r_option0 = $request->option0?:null;
+        $r_option1 = $request->option1?:null;
+        $r_option2 = $request->option2?:null;
+        $chosens = [];
+        foreach($request->all() as $key => $value) {
+            array_push($chosens, $value);
+        }
+        $flattened = null;
+        $outfititems = OutfitItem::when($r_option0,function ($query) use ($r_option0){
+            $query->whereHas('variation_options', function ($query) use ($r_option0){
+                    $query->where('id', $r_option0);
+
+            });
+        })->when($r_option1,function ($query) use ($r_option1){
+            $query->whereHas('variation_options', function ($query) use ($r_option1){
+                    $query->where('id', $r_option1);
+
+            });
+        })->when($r_option2,function ($query) use ($r_option2){
+            $query->whereHas('variation_options', function ($query) use ($r_option2){
+                    $query->where('id', $r_option2);
+
+            });
+        })
+        ->with(['variation_options'])->get()->map(function ($option) {
+            $options=[];
+            foreach ($option->variation_options as $value) {
+                    array_push($options, $value->id);
+
+            }
+            return $options;
+        });
+
+        $flattened = Arr::flatten($outfititems);
+        $flattened = array_unique($flattened);
+        }
 
         return view('front.outfits.show', [
             'outfit'=>$outfit,
-            'comments' =>$comments
+            'comments' =>$comments,
+            'variations' =>$variations,
+            'flattened' => $flattened,
+            'chosens' =>$chosens
         ]);
     }
 
@@ -313,3 +409,30 @@ class OutfitController extends Controller
         return view('front.check', compact('image'));
     }
 }
+
+
+// $('@foreach ($outfit->variations as $variation) <h3 > {{ $variation->name }} < /h3> <br ><div class = "row" >@foreach ($variation->variation_options as $ooption)<div class = "col btn border" >@if ($ooption->outfit_items->count() > 0)<a href ="{{ route('variationchoosing', ['variation_id' => $variation->id, 'option_id' => $ooption->id, 'outfit_id' => $outfit->id]) }}" >{{ $ooption->option }} </a>@else<p class = "bg-secondary" > {{ $ooption->option }} </p>@endif </div>@endforeach </div>@endforeach').appendTo('{{ '#modal_body_' . $outfit->id }}');
+
+                // @foreach ($outfit->variations as $variation) <
+//                                     h3 > {{ $variation->name }} < /h3> <
+//                                     br >
+//                                     <
+//                                     div class = "row" >
+//                                     @foreach ($variation->variation_options as $ooption)
+//                                         <
+//                                         div class = "col btn border" >
+//                                             @if ($ooption->outfit_items->count() > 0)
+//                                                 <
+//                                                 a href =
+//                                                     "{{ route('variationchoosing', ['variation_id' => $variation->id, 'option_id' => $ooption->id, 'outfit_id' => $outfit->id]) }}" >
+//                                                     {{ $ooption->option }} <
+//                                                     /a>
+//                                             @else
+//                                                 <
+//                                                 p class = "bg-secondary" > {{ $ooption->option }} <
+//                                                     /p>
+//                                             @endif <
+//                                             /div>
+//                                     @endforeach <
+//                                     /div>
+//                                 @endforeach

@@ -112,23 +112,41 @@ class OutfitFactory extends Factory
             $outfit->values()->sync($values);
             //    create items for product 
 
-            $rand_variations = rand(4, 6);
+            $color = Variation::create(['outfit_id'=>$outfit->id, 'name'=>'color']);
+            $size = Variation::create(['outfit_id'=>$outfit->id, 'name'=>'size']);
+            $quality = Variation::create(['outfit_id'=>$outfit->id, 'name'=>'quality']);
 
-            for ($i = 0; $i < $rand_variations; $i++) {
-                $rand_variation_options = rand(2, 5);
-                $variation = new Variation();
-                $variation->outfit_id = $outfit->id;
-                $variation->name = $this->faker->word();
-                $variation->save();
-                echo('variation number-> ' . $i);
-                for ($b = 0; $b <= $rand_variation_options; $b++) {
-                    VariationOption::create(['option' => $this->faker->word(), 'variation_id' => $variation->id]);
-                }
+            $color_items = ['white', 'black', 'brown', 'red'];
+            $size_items = ['S', 'M', 'L', 'XL'];
+            $quality_items = ['good', 'better', 'best', 'perfect'];
+
+            foreach ($color_items as $item) {
+                VariationOption::create(['option'=>$item, 'variation_id'=>$color->id]);
+            }
+
+            foreach ($size_items as $item) {
+                VariationOption::create(['option'=>$item, 'variation_id'=>$size->id]);
+            }
+
+            foreach ($quality_items as $item) {
+                VariationOption::create(['option'=>$item, 'variation_id'=>$quality->id]);
             }
 
 
+            // for ($i = 1; $i ==2; $i++) {
+            //     $variation = new Variation();
+            //     $variation->outfit_id = $outfit->id;
+            //     $variation->name = $this->faker->word();
+            //     $variation->save();
+            //     echo('variation number-> ' . $i);
+            //     for ($b = 0; $b <= $rand_variation_options; $b++) {
+            //         VariationOption::create(['option' => $this->faker->word(), 'variation_id' => $variation->id]);
+            //     }
+            // }
 
-            $rand_item = rand(3, 6);//items should not choose options in each category same as other item, rather in that case just stock number should be increased by 1;
+
+
+            $rand_item = rand(6, 10);//items should not choose options in each category same as other item, rather in that case just stock number should be increased by 1;
             for ($i = 0; $i < $rand_item; $i++) {
                 $item = new OutfitItem();
                 $item->outfit_id = $outfit->id;
@@ -142,8 +160,24 @@ class OutfitFactory extends Factory
                 $item->purchase_way = $item->stock > 0 ? 1 : 0; //1 = nalici bar
                 $item->save();
                 $variations = Variation::where('outfit_id', $outfit->id)->with('variation_options')->get();
-                foreach ($variations as $variation) {
-                    $item->variation_options()->attach($variation->variation_options()->inRandomOrder()->first()->id);
+                $option1 = $color->variation_options()->inRandomOrder()->first();
+                $option2 = $size->variation_options()->inRandomOrder()->first();
+                $option3 = $quality->variation_options()->inRandomOrder()->first();
+                $ifHasDuplicate = OutfitItem::whereHas('variation_options', function($query) use ($option1){
+                    $query->where('id', $option1->id);
+                })->whereHas('variation_options', function($query) use ($option2){
+                    $query->where('id', $option2->id);
+                })->whereHas('variation_options', function($query) use ($option3){
+                    $query->where('id', $option3->id);
+                })
+                ->get();
+                echo('DUPLICATE-------------------------->>>>>>>>>' . $ifHasDuplicate);
+                if ($ifHasDuplicate->count()>0) {
+                    $item->delete();
+                }else{
+                    $item->variation_options()->attach($option1);
+                    $item->variation_options()->attach($option2);
+                    $item->variation_options()->attach($option3);
                 }
             }
         });
