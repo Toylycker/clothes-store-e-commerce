@@ -55,9 +55,6 @@
                 </div>
             </div>
 
-
-
-
             <div class="col-3">
                 <div class="d-block h2 fw-bold mb-3">
                     {{ $outfit->name() }}
@@ -152,7 +149,6 @@
                             @endforeach
                         </div>
                     @endforeach
-                    <button type="submit">submit</button>
                 </form>
                 <div class="container-fluid">
                     <div class="row">

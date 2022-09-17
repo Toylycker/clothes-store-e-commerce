@@ -9,6 +9,5 @@
             <p>@lang('app.Price'): {{ $outfit->price }}   @lang('app.money')</p>
             <p>@lang('app.description'): {{ $outfit->description() }}</p>
         </div>
-        @include('front.app.add_to_basket_button')
     </div>
 </div>

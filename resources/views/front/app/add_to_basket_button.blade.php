@@ -1,5 +1,4 @@
 <div class="mt-2">
-  <button id="somebutton{{$outfit->id}}">bas</button>
     <!-- Button trigger modal -->
     <div class="d-grid gap-2">
         <button type="button" id="button{{ $outfit->id }}" class="btn btn-success" data-bs-toggle="modal"

@@ -1,4 +1,4 @@
-<form action="{{ url()->current() }}" method="get">
+<form action="{{route('outfits.home')}}" method="get">
 
         {{-- <div class="accordion-item">
             <h2 class="accordion-header" id="panelsStayOpen-heading-c">
@@ -35,6 +35,7 @@
                                 <label class="form-check-label" for="flexCheck-v-{{ $value->id }}">{{ $value->name() }}</label>
                             </div>
                         @endforeach
+                        <input type="hidden" name="c" value="{{$category_id}}">
                     </div>
                 </div>
             </div>
@@ -47,7 +48,7 @@
                 <button type="submit" class="btn btn-danger btn-sm w-100"><i class="bi bi-funnel-fill"></i></button>
             </div>
             <div class="col">
-                <a href="{{ url()->current() }}" class="btn btn-secondary btn-sm w-100"><i class="bi bi-trash-fill"></i></a>
+                <a href="{{ route('outfits.home', ['c' => $category_id]) }}" class="btn btn-secondary btn-sm w-100"><i class="bi bi-trash-fill"></i></a>
             </div>
         </div>
     </div>

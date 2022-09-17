@@ -7,6 +7,7 @@ use App\Models\Outfit;
 use Illuminate\Http\Request;
 use App\Models\Option;
 use App\Models\Age;
+use App\Models\Category;
 use App\Models\Tag;
 use App\Models\Comment;
 use App\Models\Image;
@@ -39,13 +40,21 @@ class OutfitController extends Controller
             'v.*.*' => 'nullable|integer|min:1|distinct', // values[][] => v.*.*
             'd' => 'nullable|boolean', // discount => d
             'n' => 'nullable|boolean', // new => n
-            't' => 'nullable|boolean', // credit => t
+            'c' => 'nullable'
         ]);
-
+        // return $request;
+        $category_id = $request->c?:null;
         $search = $request->q ?: null;
         $f_values = $request->has('v') ? $request->v : [];
-        $options = Option::with('values')->OrderBy('sort_order')->get();
-        $outfits = Outfit::when($search, function ($query) use($search){
+        $categories = Category::where('category_id', null)->with('children')->get();
+        $options = $category_id?Option::whereHas('categories', function ($query) use ($category_id){
+            $query->where('id', $category_id);
+        })->with('values')->get():null;
+        $outfits = Outfit::when($category_id, function ($query) use($category_id){
+            return $query->whereHas('categories', function ($query) use ($category_id){
+                $query->where('id', $category_id);
+            });
+        })->when($search, function ($query) use($search){
             return $query->where('search', 'like', '%' . $search . '%');
         })
         ->when($f_values, function ($query, $f_values) {
@@ -60,10 +69,12 @@ class OutfitController extends Controller
         ->withQueryString();
         // return $outfits;
                 return view('front.outfits.index', [
-                    'options' => $options,
+                    "options" => $options,
                     "outfits" => $outfits,
                     "search" => $search,
                     "f_values" => collect($f_values)->collapse(),
+                    "categories"=>$categories,
+                    "category_id" => $category_id
                 ]);
     }
 
