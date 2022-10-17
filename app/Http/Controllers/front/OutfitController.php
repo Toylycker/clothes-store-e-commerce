@@ -82,6 +82,9 @@ class OutfitController extends Controller
         $r_option0 = $request->option0?:null;
         $r_option1 = $request->option1?:null;
         $r_option2 = $request->option2?:null;
+        $r_option3 = $request->option3?:null;
+        $r_option4 = $request->option4?:null;
+        $r_option5 = $request->option5?:null;
         $outfititems = OutfitItem::when($r_option0,function ($query) use ($r_option0){
             $query->whereHas('variation_options', function ($query) use ($r_option0){
                     $query->where('id', $r_option0);
@@ -95,6 +98,21 @@ class OutfitController extends Controller
         })->when($r_option2,function ($query) use ($r_option2){
             $query->whereHas('variation_options', function ($query) use ($r_option2){
                     $query->where('id', $r_option2);
+
+            });
+        })->when($r_option3,function ($query) use ($r_option3){
+            $query->whereHas('variation_options', function ($query) use ($r_option3){
+                    $query->where('id', $r_option3);
+
+            });
+        })->when($r_option4,function ($query) use ($r_option4){
+            $query->whereHas('variation_options', function ($query) use ($r_option4){
+                    $query->where('id', $r_option4);
+
+            });
+        })->when($r_option5,function ($query) use ($r_option5){
+            $query->whereHas('variation_options', function ($query) use ($r_option5){
+                    $query->where('id', $r_option5);
 
             });
         })
@@ -140,19 +158,23 @@ class OutfitController extends Controller
 
     public function show( $outfit_id, Request $request){
         $outfit = Outfit::where('id', $outfit_id)
-        ->with('seller','values.option', 'tags', 'outfit_items.variation_options')->first();
+        ->with('seller','values.option', 'tags','outfit_items.variation_options')->first();
         $comments = Comment::where('outfit_id', $outfit->id)->get();
         $variations = Variation::where('outfit_id', $outfit_id)->with('variation_options.outfit_items')->get();
         if($request){
         $r_option0 = $request->option0?:null;
         $r_option1 = $request->option1?:null;
         $r_option2 = $request->option2?:null;
+        $r_option3 = $request->option3?:null;
+        $r_option4 = $request->option4?:null;
+        $r_option5 = $request->option5?:null;
         $chosens = [];
         foreach($request->all() as $key => $value) {
             array_push($chosens, $value);
         }
         $flattened = null;
-        $outfititems = OutfitItem::when($r_option0,function ($query) use ($r_option0){
+        $outfititems = OutfitItem::where('outfit_id', $outfit_id)
+        ->when($r_option0,function ($query) use ($r_option0){
             $query->whereHas('variation_options', function ($query) use ($r_option0){
                     $query->where('id', $r_option0);
 
@@ -165,6 +187,21 @@ class OutfitController extends Controller
         })->when($r_option2,function ($query) use ($r_option2){
             $query->whereHas('variation_options', function ($query) use ($r_option2){
                     $query->where('id', $r_option2);
+
+            });
+        })->when($r_option3,function ($query) use ($r_option3){
+            $query->whereHas('variation_options', function ($query) use ($r_option3){
+                    $query->where('id', $r_option3);
+
+            });
+        })->when($r_option4,function ($query) use ($r_option4){
+            $query->whereHas('variation_options', function ($query) use ($r_option4){
+                    $query->where('id', $r_option4);
+
+            });
+        })->when($r_option5,function ($query) use ($r_option5){
+            $query->whereHas('variation_options', function ($query) use ($r_option5){
+                    $query->where('id', $r_option5);
 
             });
         })

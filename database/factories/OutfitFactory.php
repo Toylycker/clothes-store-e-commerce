@@ -27,34 +27,22 @@ class OutfitFactory extends Factory
 
     public static function attachCategories(Category $category, Outfit $outfit)
     { //recursive function
-        // echo($category->name);
-        // echo($outfit->name );
-
         $outfit->categories()->attach($category->id);
-        echo ($category->name . 'attached------>');
         $outfit->update();
         if (($category->children->count() > 0)) {
             $justOneChild = $category->children()->inRandomOrder()->first();
-            echo ('chosen->' . $justOneChild->name);
             OutfitFactory::attachCategories($justOneChild, $outfit);
         }
     }
 
-    /**
-     * Configure the model factory.
-     *
-     * @return $this
-     */
     public function configure()
     {
         return $this->afterMaking(function (Outfit $outfit) {
             //
         })->afterCreating(function (Outfit $outfit) {
             $outfit->tags()->sync(Tag::inRandomOrder()->take(rand(1, 5))->pluck('id'));
-            echo ('----------------------choosing category------------------------');
 
             $category = Category::where('category_id', null)->inRandomOrder()->with('children')->first(); // i need attach product to all categories that goes down from parent. So i am grabbing the highest parent and starting attaching it from parent to children taking only one child in each.
-            echo ('----------------------chose the category------------------------');
 
             OutfitFactory::attachCategories($category, $outfit);
 
@@ -112,37 +100,17 @@ class OutfitFactory extends Factory
             $outfit->values()->sync($values);
             //    create items for product 
 
-            $color = Variation::create(['outfit_id'=>$outfit->id, 'name'=>'color']);
-            $size = Variation::create(['outfit_id'=>$outfit->id, 'name'=>'size']);
-            $quality = Variation::create(['outfit_id'=>$outfit->id, 'name'=>'quality']);
-
-            $color_items = ['white', 'black', 'brown', 'red'];
-            $size_items = ['S', 'M', 'L', 'XL'];
-            $quality_items = ['good', 'better', 'best', 'perfect'];
-
-            foreach ($color_items as $item) {
-                VariationOption::create(['option'=>$item, 'variation_id'=>$color->id]);
+            $rand_variations = rand(1, 5);
+            for ($i = 1; $i <=$rand_variations; $i++) {
+                $variation = new Variation();
+                $variation->outfit_id = $outfit->id;
+                $variation->name = $this->faker->word();
+                $variation->save();
+                $rand_variation_options= rand(1, 5);
+                for ($b = 1; $b <= $rand_variation_options; $b++) {
+                    VariationOption::create(['option' => $this->faker->word(), 'variation_id' => $variation->id]);
+                }
             }
-
-            foreach ($size_items as $item) {
-                VariationOption::create(['option'=>$item, 'variation_id'=>$size->id]);
-            }
-
-            foreach ($quality_items as $item) {
-                VariationOption::create(['option'=>$item, 'variation_id'=>$quality->id]);
-            }
-
-
-            // for ($i = 1; $i ==2; $i++) {
-            //     $variation = new Variation();
-            //     $variation->outfit_id = $outfit->id;
-            //     $variation->name = $this->faker->word();
-            //     $variation->save();
-            //     echo('variation number-> ' . $i);
-            //     for ($b = 0; $b <= $rand_variation_options; $b++) {
-            //         VariationOption::create(['option' => $this->faker->word(), 'variation_id' => $variation->id]);
-            //     }
-            // }
 
 
 
@@ -159,25 +127,23 @@ class OutfitFactory extends Factory
                 $item->credit = rand(0, 1);
                 $item->purchase_way = $item->stock > 0 ? 1 : 0; //1 = nalici bar
                 $item->save();
+                // attaching to variations 
+                $options_for_item = array();
                 $variations = Variation::where('outfit_id', $outfit->id)->with('variation_options')->get();
-                $option1 = $color->variation_options()->inRandomOrder()->first();
-                $option2 = $size->variation_options()->inRandomOrder()->first();
-                $option3 = $quality->variation_options()->inRandomOrder()->first();
-                $ifHasDuplicate = OutfitItem::whereHas('variation_options', function($query) use ($option1){
-                    $query->where('id', $option1->id);
-                })->whereHas('variation_options', function($query) use ($option2){
-                    $query->where('id', $option2->id);
-                })->whereHas('variation_options', function($query) use ($option3){
-                    $query->where('id', $option3->id);
-                })
-                ->get();
-                echo('DUPLICATE-------------------------->>>>>>>>>' . $ifHasDuplicate);
-                if ($ifHasDuplicate->count()>0) {
+                foreach ($variations as $variation) {
+                    array_push($options_for_item, $variation->variation_options()->inRandomOrder()->first()->id);
+                }
+                $ifHasDuplicate = OutfitItem::where('outfit_id', $outfit->id)->where(function ($query1) use ($options_for_item) {
+                    foreach ($options_for_item as $f_value) {
+                        $query1->whereHas('variation_options', function ($query2) use ($f_value) {
+                            $query2->where('id', $f_value);
+                        });
+                    }
+                })->count();
+                if ($ifHasDuplicate) {
                     $item->delete();
                 }else{
-                    $item->variation_options()->attach($option1);
-                    $item->variation_options()->attach($option2);
-                    $item->variation_options()->attach($option3);
+                    $item->variation_options()->sync($options_for_item);
                 }
             }
         });
