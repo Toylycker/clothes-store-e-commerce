@@ -21,11 +21,11 @@ class UserSeeder extends Seeder
 
         foreach($users as $user){
             $obj = new User();
-            $obj->username = $user[0];
+            $obj->name = $user[0];
             $obj->role = $user[1];
             $obj->phone = $user[2];
             $obj->password = bcrypt($user[3]);
-            $obj->mail = $user[4];
+            $obj->email = $user[4];
             $obj->save();
         }
     }

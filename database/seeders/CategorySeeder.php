@@ -30,7 +30,9 @@ class CategorySeeder extends Seeder
                 ],
                 ['name' => 'electronika', 'name_en' => 'electronics', 'options' => ['Country', 'Year', 'Brand'], 'children' => [
                     ['name' => 'kompyuter', 'name_en' => 'computer', 'options' => ['Country', 'Year', 'Brand', 'RAM', 'Processor', 'Display resolution'],],
-                    ['name' => 'oy tehnika', 'name_en' => 'technics for home', 'options' => ['Country', 'Year', 'Brand'],]
+                    ['name' => 'oy tehnika', 'name_en' => 'technics for home', 'options' => ['Country', 'Year', 'Brand'], 'children'=>[
+                        ['name'=>'plesos', 'name_en'=>'vacuum', 'options'=>['Year', 'Brand']]
+                    ]]
                 ]]
             ];
             foreach ($categories as  $category) {

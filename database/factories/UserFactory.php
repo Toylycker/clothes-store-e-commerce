@@ -20,11 +20,11 @@ class UserFactory extends Factory
         $username = $this->faker->Unique()->name();
         
         return [
-            'username'=>$username,
+            'name'=>$username,
             'password'=> bcrypt($username . '123'),
             'role'=>'user',
             'phone' => rand(860000000, 869999999),
-            'mail' => $this->faker->unique()->email
+            'email' => $this->faker->unique()->email
         ];
     }
 }

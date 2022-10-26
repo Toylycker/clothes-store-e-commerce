@@ -11,6 +11,8 @@ use App\Http\Controllers\front\OrderController;
 use App\Mail\WelcomeMail;
 use Illuminate\Support\Facades\Mail;
 
+Route::post('/outfit/{outfit_id}/show',[ OutfitController::class,'show'])->name('outfit.show');
+
 
 Route::middleware('guest')->group(function () {
     Route::get('register', [RegisteredUserController::class, 'create'])->name('register');
@@ -33,7 +35,7 @@ Route::middleware('auth')->controller(OrderController::class)->group(function(){
     Route::get('/my_sales', 'show_sales')->name('my_sales');
 });
 
-Route::get('/', [HomeController::class, 'index'])->name('home');
+// Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/about-us', [HomeController::class, 'about'])->name('about');
 Route::get('/contact', [HomeController::class, 'contact'])->name('contact');
 
