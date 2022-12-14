@@ -10,9 +10,6 @@
     
                     <!-- filter start -->
                     <div class="container mt-3" v-if="category_id&&options">
-                        <h1>{{form.values}}</h1>
-                        <h1>{{form.errors}}</h1>
-                        <h1>category-id->{{category_id}}</h1>
                         <form @submit.prevent="form.get(route('outfit.home'), {c:category_id})" method="get">
                             <div class="accordion-item" v-for="option in options" :key="option.id">
                                 <h2 class="accordion-header" :id="'panelsStayOpen-heading-o'+ option.id">
@@ -81,9 +78,9 @@ const props = defineProps(["options",
 let collapsed = ref(true);
 
 function handleUpdateValue(id) {
-    // console.log(id);
+    console.log(id);
     Inertia.get('/outfits/home',{c:id}, { preserveState: true, only: ['products', 'options', 'category_id'], replace: true });
-    form.reset();
+    // form.reset();
 }
 
 watch([form], ([newValues], [prevValues],) => {

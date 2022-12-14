@@ -36,7 +36,7 @@ class OutfitController extends Controller
      */
     public function index(Request $request){
 
-        // return $request;
+
         $request->validate([
             'q' => 'nullable|string|max:30', // search => q
             'v' => 'nullable|array', // values => v
@@ -44,18 +44,22 @@ class OutfitController extends Controller
             // 'v.*.*' => 'nullable|integer|min:1|distinct', // values[][] => v.*.*
             'd' => 'nullable|boolean', // discount => d
             'n' => 'nullable|boolean', // new => n
-            'c' => 'nullable|integer'
+            'c' => 'nullable'
         ]);
-        $category_id = $request->c?:null;
+        $category_id = $request->c?$request->c:null;
         $search = $request->q ?: null;
         $f_values = $request->v? Value::whereIn('id', $request->v)->with('option')->get()->mapToGroups(function ($value) {
 
             return [$value->option->id=>$value->id];
         }): [];
         $categories = Category::where('category_id', null)->with('children')->get();
+
+
         $options = $category_id?Option::whereHas('categories', function ($query) use ($category_id){
             $query->where('id', $category_id);
         })->with('values')->get():null;
+
+
         $outfits = Outfit::when($category_id, function ($query) use($category_id){
             return $query->whereHas('categories', function ($query) use ($category_id){
                 $query->where('id', $category_id);
@@ -83,83 +87,6 @@ class OutfitController extends Controller
                     "categories"=>CategoryResource::collection($categories),
                     "category_id" => $category_id
                 ]);
-    }
-
-    function variation_choosing(Request $request){//instead of ids, there should be request->options which contains list og options. one from each variation
-        $r_option0 = $request->option0?:null;
-        $r_option1 = $request->option1?:null;
-        $r_option2 = $request->option2?:null;
-        $r_option3 = $request->option3?:null;
-        $r_option4 = $request->option4?:null;
-        $r_option5 = $request->option5?:null;
-        $outfititems = OutfitItem::when($r_option0,function ($query) use ($r_option0){
-            $query->whereHas('variation_options', function ($query) use ($r_option0){
-                    $query->where('id', $r_option0);
-
-            });
-        })->when($r_option1,function ($query) use ($r_option1){
-            $query->whereHas('variation_options', function ($query) use ($r_option1){
-                    $query->where('id', $r_option1);
-
-            });
-        })->when($r_option2,function ($query) use ($r_option2){
-            $query->whereHas('variation_options', function ($query) use ($r_option2){
-                    $query->where('id', $r_option2);
-
-            });
-        })->when($r_option3,function ($query) use ($r_option3){
-            $query->whereHas('variation_options', function ($query) use ($r_option3){
-                    $query->where('id', $r_option3);
-
-            });
-        })->when($r_option4,function ($query) use ($r_option4){
-            $query->whereHas('variation_options', function ($query) use ($r_option4){
-                    $query->where('id', $r_option4);
-
-            });
-        })->when($r_option5,function ($query) use ($r_option5){
-            $query->whereHas('variation_options', function ($query) use ($r_option5){
-                    $query->where('id', $r_option5);
-
-            });
-        })
-        ->with(['variation_options'])->get()->map(function ($option) {
-            $options=[];
-            foreach ($option->variation_options as $value) {
-                    array_push($options, $value->id);
-
-            }
-            return $options;
-        });
-
-        $flattened = Arr::flatten($outfititems);
-        $flattened = array_unique($flattened);
-
-        return $flattened;
-
-        $outfititemswithalloptions = OutfitItem::whereHas('variation_options', function ($query) use ($flattened){
-            $query->whereIn('id', $flattened);
-        })
-        ->with('variation_options')
-        ->get()
-        ->map(function ($option) {
-            $ooptions=[];
-            foreach ($option->variation_options as $value2) {
-                array_push($ooptions, $value2->option);
-            }
-            return $ooptions;
-        });
-        $ready = Arr::flatten($outfititemswithalloptions);
-        return $ready;
-
-        return redirect()->back()->with(['needyOptions'=>$ready]);
-    }
-
-    function variations(Request $request){
-        $variations = Variation::where('outfit_id', $request->outfit_id)->with('variation_options.outfit_items')->get();
-
-        return response()->json($variations);
-
     }
 
 
@@ -477,3 +404,87 @@ class OutfitController extends Controller
 //                                     @endforeach <
 //                                     /div>
 //                                 @endforeach
+
+
+
+
+
+// Handling before start 
+    // function variation_choosing(Request $request){//instead of ids, there should be request->options which contains list og options. one from each variation
+    //     $r_option0 = $request->option0?:null;
+    //     $r_option1 = $request->option1?:null;
+    //     $r_option2 = $request->option2?:null;
+    //     $r_option3 = $request->option3?:null;
+    //     $r_option4 = $request->option4?:null;
+    //     $r_option5 = $request->option5?:null;
+    //     $outfititems = OutfitItem::when($r_option0,function ($query) use ($r_option0){
+    //         $query->whereHas('variation_options', function ($query) use ($r_option0){
+    //                 $query->where('id', $r_option0);
+
+    //         });
+    //     })->when($r_option1,function ($query) use ($r_option1){
+    //         $query->whereHas('variation_options', function ($query) use ($r_option1){
+    //                 $query->where('id', $r_option1);
+
+    //         });
+    //     })->when($r_option2,function ($query) use ($r_option2){
+    //         $query->whereHas('variation_options', function ($query) use ($r_option2){
+    //                 $query->where('id', $r_option2);
+
+    //         });
+    //     })->when($r_option3,function ($query) use ($r_option3){
+    //         $query->whereHas('variation_options', function ($query) use ($r_option3){
+    //                 $query->where('id', $r_option3);
+
+    //         });
+    //     })->when($r_option4,function ($query) use ($r_option4){
+    //         $query->whereHas('variation_options', function ($query) use ($r_option4){
+    //                 $query->where('id', $r_option4);
+
+    //         });
+    //     })->when($r_option5,function ($query) use ($r_option5){
+    //         $query->whereHas('variation_options', function ($query) use ($r_option5){
+    //                 $query->where('id', $r_option5);
+
+    //         });
+    //     })
+    //     ->with(['variation_options'])->get()->map(function ($option) {
+    //         $options=[];
+    //         foreach ($option->variation_options as $value) {
+    //                 array_push($options, $value->id);
+
+    //         }
+    //         return $options;
+    //     });
+
+    //     $flattened = Arr::flatten($outfititems);
+    //     $flattened = array_unique($flattened);
+
+    //     return $flattened;
+
+    //     $outfititemswithalloptions = OutfitItem::whereHas('variation_options', function ($query) use ($flattened){
+    //         $query->whereIn('id', $flattened);
+    //     })
+    //     ->with('variation_options')
+    //     ->get()
+    //     ->map(function ($option) {
+    //         $ooptions=[];
+    //         foreach ($option->variation_options as $value2) {
+    //             array_push($ooptions, $value2->option);
+    //         }
+    //         return $ooptions;
+    //     });
+    //     $ready = Arr::flatten($outfititemswithalloptions);
+    //     return $ready;
+
+    //     return redirect()->back()->with(['needyOptions'=>$ready]);
+    // }
+
+    // function variations(Request $request){
+    //     $variations = Variation::where('outfit_id', $request->outfit_id)->with('variation_options.outfit_items')->get();
+
+    //     return response()->json($variations);
+
+    // }
+
+// Handling before end 

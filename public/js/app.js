@@ -27130,7 +27130,7 @@ var __default__ = {
     });
     var collapsed = (0,_vue_runtime_core__WEBPACK_IMPORTED_MODULE_4__.ref)(true);
     function handleUpdateValue(id) {
-      // console.log(id);
+      console.log(id);
       _inertiajs_inertia__WEBPACK_IMPORTED_MODULE_2__.Inertia.get('/outfits/home', {
         c: id
       }, {
@@ -27138,8 +27138,9 @@ var __default__ = {
         only: ['products', 'options', 'category_id'],
         replace: true
       });
-      form.reset();
+      // form.reset();
     }
+
     (0,_vue_runtime_core__WEBPACK_IMPORTED_MODULE_5__.watch)([form], function (_ref2, _ref3) {
       var _ref4 = _slicedToArray(_ref2, 1),
         newValues = _ref4[0];
@@ -28477,7 +28478,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
             "key-field": "id",
             "label-field": "name",
             "onUpdate:value": $setup.handleUpdateValue
-          }, null, 8 /* PROPS */, ["options"]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" filter start "), $props.category_id && $props.options ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_2, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("h1", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($setup.form.values), 1 /* TEXT */), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("h1", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($setup.form.errors), 1 /* TEXT */), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("h1", null, "category-id->" + (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($props.category_id), 1 /* TEXT */), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("form", {
+          }, null, 8 /* PROPS */, ["options"]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" filter start "), $props.category_id && $props.options ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_2, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("form", {
             onSubmit: _cache[1] || (_cache[1] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.withModifiers)(function ($event) {
               return $setup.form.get(_ctx.route('outfit.home'), {
                 c: $props.category_id
