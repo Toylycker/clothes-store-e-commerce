@@ -6,7 +6,6 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\Outfit;
 use App\Models\Option;
-use App\Models\Age;
 use App\Models\Tag;
 use Illuminate\Support\Str;
 use App\Models\Seller;
@@ -89,7 +88,7 @@ class OutfitController extends Controller
             })
             ->orderBy('updated_at')
             ->orderBy('id')
-            ->with(['tags', 'values.option', 'age', 'outfitsellers.seller',])
+            ->with(['tags', 'values.option', 'outfitsellers.seller',])
             ->paginate(50)
             ->withQueryString();
 
@@ -118,8 +117,6 @@ class OutfitController extends Controller
             ->get();
         $outfitseller = Outfitseller::with(['outfit'])
             ->get();
-        $ages = Age::orderBy('id')
-            ->get();
         $tags = Tag::orderBy('id')
             ->get();
          $options = Option::with(['values'])
@@ -129,7 +126,6 @@ class OutfitController extends Controller
 
         return view('admin.outfits.create', [
             'outfit' => $outfit,
-            'ages' => $ages,
             'tags' => $tags,
             'options' => $options,
             'sellers' => $sellers,
@@ -152,7 +148,6 @@ class OutfitController extends Controller
             'values_id.*' => 'required|integer|min:1|distinct',
             'image' => 'nullable|image|mimes:jpg,png|dimensions:min_width=500,min_height=500|max:1024',
         ]);
-    $age = Age::findOrFail($request->age_id);
     $seller = Seller::findOrFail($request->seller_id);
     $name = $request->name;
     $name_en = $request->name_en;
@@ -160,7 +155,6 @@ class OutfitController extends Controller
     // outfit
     $outfit = new Outfit;
     $outfitseller = new Outfitseller;
-    $outfit->age_id = $age->id;
     $outfit->name = $name;
     $outfit->name_en = $name_en;
     $outfit->slug = Str::slug($name) . '-' . $outfit->id;
@@ -223,8 +217,6 @@ class OutfitController extends Controller
             ->where('seller_id', $seller_id)
             ->with(['outfit'])
             ->firstOrFail();
-        $ages = Age::orderBy('id')
-            ->get();
         $tags = Tag::orderBy('id')
             ->get();
         $options = Option::with(['values'])
@@ -234,7 +226,6 @@ class OutfitController extends Controller
 
         return view('admin.outfits.edit', [
             'outfit' => $outfit,
-            'ages' => $ages,
             'tags' => $tags,
             'options' => $options,
             'outfitseller' => $outfitseller,
@@ -248,7 +239,6 @@ class OutfitController extends Controller
         $outfit = Outfit::where('id', $id)
             ->firstOrFail();
         $request->validate([
-            'age' => 'integer|min:1',
             'seller_id' => 'required|integer|min:1',
             'name' => 'nullable|string|max:2550',
             'name_en' => 'nullable|string|max:2550',
@@ -270,13 +260,11 @@ class OutfitController extends Controller
         // $outfitseller = Outfitseller::where('outfit_id', $id)->where("seller_id", $request->seller_id)
         //     ->firstOrFail();
         $outfitseller = Outfitseller::firstOrCreate(['outfit_id'=>$id, 'seller_id'=>$request->seller_id]);
-        $age = Age::findOrFail($request->age_id);
         $seller = Seller::findOrFail($request->seller_id);
         $name = $request->name;
         $name_en = $request->name_en;
 
         // outfit. actually seller should not change name and description ofm outfit itself as other seller also having it with same id. seller should only change price and discount.
-        $outfit->age_id = $age->id;
         $outfitseller->seller_id = $seller->id;
         $outfit->name = $name;
         $outfit->name_en = $name_en;

@@ -5,7 +5,7 @@ import { createInertiaApp } from '@inertiajs/inertia-vue3';
 import { InertiaProgress } from '@inertiajs/progress';
 
 import "bootstrap/dist/css/bootstrap.min.css"
-import "bootstrap/dist/js/bootstrap.js"
+// import "bootstrap/dist/js/bootstrap.js"
 
 const appName = window.document.getElementsByTagName('title')[0]?.innerText || 'Laravel';
 

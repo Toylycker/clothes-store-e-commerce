@@ -25,6 +25,12 @@ class Seller extends Model
         return $this->hasMany(Outfit::class);
     }
 
+    // so that we can group items by its seller in shopcart because location and posession of that items are from sm eplace 
+    public function shopCarts()
+    {
+        return $this->hasMany(shopCarts::class);
+    }
+
     public function name()
     {
         if (app()->isLocale('en')) {

@@ -20,4 +20,9 @@ class OutfitItem extends Model
     {
         return $this->belongsToMany(VariationOption::class, 'product_configurations', 'ou_it_id', 'va_op_id');
     }
+
+    public function shopCarts(): BelongsToMany
+    {
+        return $this->belongsToMany(ShopCart::class, 'shop_cart_items')->withPivot('quantity');
+    }
 }

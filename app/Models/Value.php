@@ -18,7 +18,7 @@ class Value extends Model
 
     public function outfits()
     {
-        return $this->belongsToMany(Outfit::class, 'outfit_values')->withPivot('quantity') ;
+        return $this->belongsToMany(Outfit::class, 'outfit_values');
     }
 
     public function option()

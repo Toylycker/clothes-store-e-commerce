@@ -37,6 +37,12 @@ class User extends Authenticatable
         
     }
 
+    public function shopCarts()
+    {
+        return $this->hasMany(ShopCart::class);
+        
+    }
+
     public function comments()
     {
         return $this->hasMany(Comment::class);

@@ -6,7 +6,6 @@ use Illuminate\Database\Eloquent\Factories\Factory;
 use App\Models\Location;
 use App\Models\Seller;
 use App\Models\Tag;
-use App\Models\Age;
 use App\Models\Category;
 use App\Models\Outfit;
 use App\Models\Option;

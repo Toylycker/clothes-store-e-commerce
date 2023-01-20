@@ -1,6 +1,6 @@
 <template>
   <Nav v-if="$page.component!='front/Products'" />
-  <div>
+  <div class="container">
       <slot></slot>
   </div>
 </template>

@@ -5,7 +5,6 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\admin\OutfitController;
 use App\Http\Controllers\admin\DashboardController;
 use App\Http\Controllers\admin\LocationController;
-use App\Http\Controllers\admin\AgeController;
 use App\Http\Controllers\admin\SellerController;
 use App\Http\Controllers\admin\TagController;
 use App\Http\Controllers\admin\UserController;

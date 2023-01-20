@@ -13,8 +13,13 @@ return new class extends Migration
      */
     public function up()
     {
+        //should be deleted after delivery by doing order->orderProcesses->delete()
         Schema::create('delivery_processes', function (Blueprint $table) {
             $table->id();
+            $table->unsignedBigInteger('order_id');
+            $table->foreign('order_id')->references('id')->on('orders')->cascadeOnDelete();
+            $table->string('status');
+            $table->text('note');
             $table->timestamps();
         });
     }

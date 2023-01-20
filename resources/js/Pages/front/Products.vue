@@ -1,10 +1,11 @@
 <template >
     <div class="div">
             <n-layout has-sider position="absolute">
-                <n-layout-sider position="absolute" bordered collapse-mode="width" :collapsed-width="0" :width="240" :collapsed="collapsed"
+                <n-layout-sider position="absolute" bordered collapse-mode="width" :collapsed-width="10" :width="240" :collapsed="collapsed"
+                 :show-collapsed-content=false 
                     show-trigger @collapse="collapsed = true" @expand="collapsed = false">
     
-                    <n-tree-select class="mt-1" :show-path="true" placeholder='kategoriya saylang' default-value="name"
+                    <n-tree-select class="mt-1" :show-path="true" placeholder='kategoriya saylang' :default-value="category_id?parseInt(category_id):null"
                         :options="categories.data" children-field="children" key-field="id" label-field="name"
                         @update:value="handleUpdateValue" />
     
@@ -37,9 +38,8 @@
                 <n-layout>
                     <Nav/>
                         <div
-                            class="m-3 row row-cols-2 row-cols-sm-2 row-cols-md-4 row-cols-lg-5 row-cols-xl-6 g-3 shadow rounded">
-                            <div class="shadow rounded" v-for="product in products.data" :key="product.id">
-    
+                            class="m-3 row row-cols-2 row-cols-sm-2 row-cols-md-4 row-cols-lg-5 row-cols-xl-6 rounded d-flex justify-content-center">
+                            <div class="shadow rounded col m-2" v-for="product in products.data" :key="product.id">
                                 <img :src="'/img/temp/outfit.png'" alt="" class="img-fluid border rounded">
                                 <div>
                                     <Link :href="route('outfit.show', [product.id, product.seller.id])"
@@ -69,23 +69,31 @@ const props = defineProps(["options",
     "categories",
     "category_id"]);
 
+    // category id for watcher which actually issigned when category changed in NtreeSelect so that watcher can take correct category id right away 
+    let categoryIdForFilter = props.category_id
+
     const form = useForm(
         {
-            values:[]
+            // to make filter available when rendomly accessed with f_values 
+            values:props.f_values
         }
     );
 
 let collapsed = ref(true);
 
 function handleUpdateValue(id) {
-    console.log(id);
-    Inertia.get('/outfits/home',{c:id}, { preserveState: true, only: ['products', 'options', 'category_id'], replace: true });
-    // form.reset();
+    console.log('i am only when category changed');
+    Inertia.get('/outfits/home',{c:id}, { preserveState: true, replace: true });
+    // to clean form.values after category changed 
+    categoryIdForFilter = id;
+    form.values=[];
 }
 
 watch([form], ([newValues], [prevValues],) => {
-    console.log('values');
-    Inertia.get('/outfits/home',{c:props.category_id, v:form.values}, { preserveState: true, only: ['products',], replace: true });
+    console.log(props.category_id);
+    console.log('values watcher');
+    console.log(categoryIdForFilter);
+    Inertia.get('/outfits/home',{c:categoryIdForFilter, v:form.values}, { preserveState: true, replace: true });
 })
 </script>
 <script>

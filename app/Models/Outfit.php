@@ -25,7 +25,7 @@ class Outfit extends Model
 
     public function values()
     {
-        return $this->belongsToMany(Value::class, 'outfit_values')->withPivot('quantity') ;
+        return $this->belongsToMany(Value::class, 'outfit_values');
     }
 
     public function variations(): HasMany
@@ -46,11 +46,6 @@ class Outfit extends Model
     public function categories()
     {
         return $this->belongsToMany(Category::class, 'category_outfits');
-    }
-
-    public function ages()
-    {
-        return $this->belongsToMany(Age::class, 'outfit_ages')->withPivot('quantity');
     }
 
     public function name()

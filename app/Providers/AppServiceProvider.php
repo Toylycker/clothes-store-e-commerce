@@ -2,7 +2,7 @@
 
 namespace App\Providers;
 
-use App\Models\Age;
+
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Facades\View;
@@ -49,19 +49,5 @@ class AppServiceProvider extends ServiceProvider
             ]);
         });
 
-
-        View::composer('*', function ($view) {
-            $basket = [];
-            if(Cookie::has('store_outfits')){
-                $basket = explode(",", Cookie::get('store_outfits'));
-                array_shift($basket);
-
-            }
-            // dd(Cookie::get('store_outfits'));
-
-            return $view->with([
-                'basket' => $basket
-            ]);
-        });
     }
 }
