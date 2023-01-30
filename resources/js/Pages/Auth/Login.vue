@@ -18,24 +18,19 @@ const form = useForm({
     remember: false
 });
 
-const submit = () => {
-    form.post(route('login'), {
-        onFinish: () => form.reset('password'),
-    });
-};
 </script>
 
 <template>
     <BreezeGuestLayout>
         <Head title="Log in" />
 
-        <BreezeValidationErrors class="mb-4" />
-
         <div v-if="status" class="mb-4 font-medium text-sm text-green-600">
             {{ status }}
         </div>
 
-        <form @submit.prevent="submit">
+        <form @submit.prevent="form.post(route('login'), {
+        onFinish: () => form.reset('password'),
+    });">
             <div>
                 <BreezeLabel for="email" value="Email" />
                 <BreezeInput id="email" type="email" class="mt-1 block w-full" v-model="form.email" required autofocus autocomplete="username" />

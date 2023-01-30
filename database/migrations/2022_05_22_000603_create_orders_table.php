@@ -15,14 +15,19 @@ return new class extends Migration
     {
         Schema::create('orders', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('location_id');
-            $table->foreign('location_id')->references('id')->on('locations')->cascadeOnDelete();
             $table->unsignedBigInteger('user_id');
             $table->foreign('user_id')->references('id')->on('users')->cascadeOnDelete();
+            $table->unsignedBigInteger('outfit_item_id');
+            $table->foreign('outfit_item_id')->references('id')->on('outfit_items')->cascadeOnDelete();
+            $table->unsignedBigInteger('seller_id');
+            $table->foreign('seller_id')->references('id')->on('sellers')->cascadeOnDelete();
+            $table->text('from_location')->nullable();
+            $table->text('to_location')->nullable();
             $table->unsignedBigInteger('payment_id')->nullable();
             $table->foreign('payment_id')->references('id')->on('payments');
-            $table->integer('order_num')->unique();
-            $table->string('phone');
+            $table->string('order_num')->unique();
+            $table->string('receiver_phone');
+            $table->string('sender_phone');
             $table->boolean('online_pay_done')->nullable();
             $table->string('language')->nullable();//language using which customer made the order to choose right email on right language to send him
             $table->boolean('has_mail')->nullable();//does customer have mail
@@ -30,10 +35,11 @@ return new class extends Migration
             $table->boolean('mail_sent')->nullable();
             $table->dateTime('deleted_at')->nullable();
             $table->boolean('disabled')->nullable(); // in case of customer deleting the order, it should be disabled true and not seen to customer but show up on statistics.
-            $table->unsignedBigInteger('outfits_total_amount')->nullable();
             $table->unsignedBigInteger('delivery_fee')->nullable();
-            $table->unsignedBigInteger('order_total_amount')->nullable();// = outfits_total_amount + delivery_fee
-            $table->string('note');
+            $table->integer('price');
+            $table->integer('quantity');
+            $table->string('order_status');//paid->accepted->sent->received
+            //one order has many delivery proccesess(accepted from delivery company->sent->on its way->delivered)
             $table->timestamps();
         });
     }

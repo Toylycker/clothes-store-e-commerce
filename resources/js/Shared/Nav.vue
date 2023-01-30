@@ -17,6 +17,37 @@
             <Link class="nav-link" :class="{ 'active': $page.component == 'front/Products' }" aria-current="page"
               :href="route('outfits.home')">Products</Link>
           </li>
+          <li class="nav-item">
+            <Link class="nav-link" :class="{ 'active': $page.component == 'front/orders/index' }" aria-current="page"
+              :href="route('orders')">Orders</Link>
+          </li>
+          <div v-if="$page.props.auth.user">
+            <li v-if="$page.props.auth.user.role == 'user'" class="nav-item">
+              <Link class="nav-link" :class="{ 'active': $page.component == 'front/seller/register' }" aria-current="page"
+                :href="route('seller.register')">register seller</Link>
+            </li>
+          </div>
+          <div v-if="$page.props.auth.user">
+            <li v-if="$page.props.auth.user.role == 'seller'" class="nav-item">
+              <Link class="nav-link" :class="{ 'active': $page.component == 'front/seller/CreateProduct' }" aria-current="page"
+              :href="route('seller.create.product')"
+                >create new product</Link>
+            </li>
+          </div>
+          <div v-if="$page.props.auth.user == null || $page.props.auth.user == undefined ">
+            <li class="nav-item">
+              <Link class="nav-link" aria-current="page"
+              :href="route('login')"
+                >Login</Link>
+            </li>
+          </div>
+          <div v-if="$page.props.auth.user">
+            <li class="nav-item">
+              <Link class="nav-link btn" aria-current="page"
+              :href="route('logout')" method="Post" as="button"
+                >logout</Link>
+            </li>
+          </div>
         </ul>
       </div>
       <Link class="nav-link" :class="{ 'active': $page.component == 'front/basket/index' }" aria-current="page"

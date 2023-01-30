@@ -12,16 +12,20 @@ class Order extends Model
 
     protected $guarded = ['id'];
 
-    public function outfitItems()
+    public function outfitItem()
     {
-        return $this->belongsToMany(OutfitItem::class, 'order_items');
-        
+        return $this->belongsTo(OutfitItem::class);
     }
 
     public function user()
     {
         return $this->belongsTo(User::class);
         
+    }
+
+    public function seller()
+    {
+        return $this->belongsTo(Seller::class);
     }
 
     public function location()

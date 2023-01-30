@@ -23,9 +23,15 @@ Route::controller(OutfitController::class)->group(function () {
 });
 
 Route::controller(ShopCartController::class)->middleware('auth')->group(function () {
+    Route::post('/additem/{id}', 'addItem')->name('additem');
     Route::get('/shopcart', 'index')->name('shopcart');
-    Route::get('/additem/{id}', 'addItem')->name('additem');
+    Route::delete('/shopcart/delete/{id}', 'destroy')->name('shopcart.delete');
+    Route::post('/updatequantity/{itemid}/{quantity}', 'updateQuantity')->name('updatequantity');
+    Route::post('/setorder', 'setOrder')->name('setorder');
+});
 
+Route::controller(OrderController::class)->middleware('auth')->group(function () {
+    Route::get('/orders', 'index')->name('orders');
 });
 
 
@@ -68,5 +74,9 @@ Route::middleware('auth')->controller(SellerController::class)->name('seller.')-
 });
 Route::middleware(['auth', 'seller'])->controller(SellerController::class)->name('seller.')->prefix('seller')->group(function () {
     Route::get('/outfit/my_outfits', 'my_outfits')->name('outfit.my_outfits');
-
+    Route::get('/create/product', 'createProduct')->name('create.product');
+    Route::post('/create/product', 'createProduct')->name('create.product');
+    Route::post('/store/values/and/laststep', 'sendToLastStep')->name('send.to.laststep');
+    Route::get('/add/item/{outfit}', 'addItem')->name('add.item');
+    Route::post('/add/item/{outfit}', 'storeItem')->name('add.item');
 });

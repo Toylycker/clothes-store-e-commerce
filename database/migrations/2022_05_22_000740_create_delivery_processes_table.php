@@ -12,7 +12,7 @@ return new class extends Migration
      * @return void
      */
     public function up()
-    {
+    {   //every order main movement shoud have one of this model 
         //should be deleted after delivery by doing order->orderProcesses->delete()
         Schema::create('delivery_processes', function (Blueprint $table) {
             $table->id();

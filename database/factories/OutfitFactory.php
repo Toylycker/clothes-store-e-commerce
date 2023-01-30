@@ -159,7 +159,7 @@ class OutfitFactory extends Factory
     {
         $createdAt = $this->faker->dateTimeBetween($startDate = '-3 months', $endDate = 'now');
         return [
-            'name' => null,
+            'name' => 'null',
             'name_en' => 'null',
             'slug' => "null",
             // 'description' => $this->faker->paragraph(rand(3, 5)),
@@ -167,7 +167,8 @@ class OutfitFactory extends Factory
             'viewed' => rand(0, 50),
             'liked' => rand(0, 30),
             'created_at' => $createdAt,
-            'seller_id' => Seller::inRandomOrder()->first()->id
+            'seller_id' => Seller::inRandomOrder()->first()->id,
+            'confirmed' => 1,
         ];
     }
 }

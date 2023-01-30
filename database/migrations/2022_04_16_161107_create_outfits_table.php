@@ -17,17 +17,18 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('seller_id')->index();
             $table->foreign('seller_id')->references('id')->on('sellers')->cascadeOnDelete();
-            $table->string('name')->nullable();
-            $table->string('name_en');
+            $table->string('name');
+            $table->string('name_en')->nullable();
             $table->string('slug')->index()->nullable;
             $table->unsignedInteger('viewed')->default(0);
             $table->boolean('recommended')->default(0);
             $table->unsignedInteger('liked')->default(0);
             $table->string('image')->nullable();
             $table->string('search')->nullable();// all relations name for quick search by one query
-            $table->timestamps();
             $table->text('description')->nullable();
             $table->text('description_en')->nullable();
+            $table->boolean('confirmed');
+            $table->timestamps();
         });
     }
 

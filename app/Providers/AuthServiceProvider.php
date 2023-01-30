@@ -2,6 +2,8 @@
 
 namespace App\Providers;
 
+use App\Models\Outfit;
+use App\Models\User;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 use Illuminate\Support\Facades\Gate;
 
@@ -24,6 +26,10 @@ class AuthServiceProvider extends ServiceProvider
     public function boot()
     {
         $this->registerPolicies();
+
+        Gate::define('add-item', function (User $user, Outfit $outfit) {
+            return $user->seller->id === $outfit->seller_id || $user->role == 'admin';
+        });
 
         //
     }

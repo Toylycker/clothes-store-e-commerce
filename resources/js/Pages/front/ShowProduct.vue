@@ -19,7 +19,7 @@
                 {{ product.seller.name }}
             </a>
             <p>{{ product.seller.company_name }}</p>
-            <p>{{ product.seller.phone }}</p>
+            <p>{{ product.seller.seller_phone }}</p>
             <div class="d-flex align-items-center fw-bold mb-3">
                 <div class="me-4">
                     <i class="bi bi-basket-fill text-black-50"></i> {{ product.sold }}
@@ -36,7 +36,7 @@
         <!-- choosing options Start -->
         <div class="col-sm-12 col-md-3 col-lg-5 d-flex justify-content-center">
             <form @submit.prevent="form.post(route('outfit.show', product.id),
-                // {onSuccess: () => form.reset()}
+                {preserveScroll:true}
             )" method="POST" id='product_choosing_form'>
                 <n-button v-if="max != min" class="w-100 my-2" type="info" dashed>
                     {{ min }}$-{{ max }}$
@@ -89,10 +89,11 @@
                     <div class="container" v-for="product_item in product_items" :key="product_item.id">
                         <div class="d-flex g-3">
                             <n-button class="m-2">{{ product_item.price * quantity }} $</n-button>
-                            <n-input-number class="m-2" v-model:value="quantity" placeholder="nache sany?" :min="1" :max="100" />
+                            <n-input-number class="m-2" v-model:value="quantity" placeholder="nache sany?" :min="1" :max="product_item.stock" />
                         </div>
                         <n-button type="success" dashed class="w-100 my-1" 
-                        @click="$inertia.get(route('additem', product_item.id), {'quantity':quantity, 'seller':product.seller.id})">
+                        @click="$inertia.post(route('additem', product_item.id), {'quantity':quantity, 'seller':product.seller.id}, 
+                        {onFinish:()=>{form.options = [];quantity=1;}})">
                             Sebede gosh {{ product_item.id }}</n-button>
                     </div>
                 </div>

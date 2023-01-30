@@ -15,6 +15,15 @@ class Seller extends Model
 
     protected $hidden = ['pivot'];
 
+    protected $fillable = [
+        'user_id',
+        'location_id',
+    'seller_name',
+    'seller_last_name',
+    'seller_phone',
+    'shop_address',
+    'company_name'];
+
     public function location()
     {
         return $this->belongsTo(Location::class);
@@ -29,6 +38,12 @@ class Seller extends Model
     public function shopCarts()
     {
         return $this->hasMany(shopCarts::class);
+    }
+
+    //So that we can see customers' orders from this seller
+    public function orders()
+    {
+        return $this->hasMany(Order::class);
     }
 
     public function name()

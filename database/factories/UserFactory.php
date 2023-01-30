@@ -24,6 +24,7 @@ class UserFactory extends Factory
             'password'=> bcrypt($username . '123'),
             'role'=>'user',
             'phone' => rand(860000000, 869999999),
+            'address' => 'some address, apartment ' . rand(1, 999),
             'email' => $this->faker->unique()->email
         ];
     }

@@ -11,6 +11,7 @@ class Variation extends Model
 {
     use HasFactory;
     public $timestamps = false;
+    protected $fillable = ['name', 'outfit_id'];
 
 
     public function outfit(): BelongsTo

@@ -22,10 +22,10 @@ class SellerFactory extends Factory
         return [
             'location_id' => Location::inRandomOrder()->first(),
             'user_id' => $this->faker->unique()->numberBetween($min = 2, $max = 10),
-            'name' => $this->faker->unique()->name(),
-            'last_name' => $this->faker->unique()->lastName(),
-            'phone' => '86' . rand(2000000, 5999999),
-            'address' => $this->faker->unique()->streetAddress(),
+            'seller_name' => $this->faker->unique()->name(),
+            'seller_last_name' => $this->faker->unique()->lastName(),
+            'seller_phone' => '86' . rand(2000000, 5999999),
+            'shop_address' => $this->faker->unique()->streetAddress(),
             'company_name' => $this->faker->unique()->company(),
         ];
     }

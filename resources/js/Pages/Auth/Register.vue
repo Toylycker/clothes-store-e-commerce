@@ -1,62 +1,106 @@
-<script setup>
-import BreezeButton from '@/Components/Button.vue';
-import BreezeGuestLayout from '@/Layouts/Guest.vue';
-import BreezeInput from '@/Components/Input.vue';
-import BreezeLabel from '@/Components/Label.vue';
-import BreezeValidationErrors from '@/Components/ValidationErrors.vue';
-import { Head, Link, useForm } from '@inertiajs/inertia-vue3';
+<template>
+    <h1>{{ $page.props.errors }}</h1>
+    <n-card class="container-fluid d-flex align-items-center justify-content-center">
+        <n-tabs class="flex-grow-1" default-value="signin" size="large" animated style="margin: 0 -4px"
+            pane-style="padding-left: 4px; padding-right: 4px; box-sizing: border-box;">
+            <n-tab-pane name="signin" tab="Sign in">
+                <n-form>
+                    <n-form-item-row label="name">
+                        <n-input />
+                    </n-form-item-row>
+                    <n-form-item-row label="Password">
+                        <n-input />
+                    </n-form-item-row>
+                </n-form>
+                <n-button type="primary" block secondary strong>
+                    Sign In
+                </n-button>
+            </n-tab-pane>
+            <n-tab-pane name="signup" tab="Sign up">
+                <n-form>
+                    <n-form-item-row label="name">
+                        <n-input v-model:value="register.name" />
+                    </n-form-item-row>
+                    <n-form-item-row label="Email">
+                        <n-auto-complete v-model:value="register.email" :input-props="{
+                            autocomplete: 'disabled'
+                        }" :options="options" placeholder="Email" />
+                    </n-form-item-row>
+                    <n-form-item-row label="Address">
+                        <n-input v-model:value="register.address" />
+                    </n-form-item-row>
+                    <n-form-item-row label="Phone">
+                        <n-input-group>
+                            <n-button >
+                                +
+                            </n-button>
+                            <n-input v-model:value="register.phone" />
+                        </n-input-group>
+                    </n-form-item-row>
+                    <n-form-item-row label="Password">
+                        <n-input v-model:value="register.password" />
+                    </n-form-item-row>
+                    <n-form-item-row label="Reenter Password">
+                        <n-input v-model:value="register.password_confirmation" />
+                    </n-form-item-row>
+                </n-form>
+                <n-button @click="submitRegister" type="primary" block secondary strong>
+                    Sign up
+                </n-button>
+            </n-tab-pane>
+        </n-tabs>
+    </n-card>
 
-const form = useForm({
+</template>
+
+<script setup>
+import { Head, Link, useForm } from '@inertiajs/inertia-vue3';
+import { computed, ref } from '@vue/runtime-core';
+import { NTab, NForm, NFormItemRow, 
+    NCard, NInput, NTabPane, NTabs, NAutoComplete,
+    NButton, NInputGroup } from 'naive-ui'
+
+const register = useForm({
     name: '',
     email: '',
+    phone: '',
+    address: '',
     password: '',
     password_confirmation: '',
     terms: false,
 });
 
-const submit = () => {
-    form.post(route('register'), {
-        onFinish: () => form.reset('password', 'password_confirmation'),
+const login = useForm({
+    email: '',
+    password: '',
+});
+
+const options = computed(() => {
+    return ['@gmail.com', '@163.com', '@qq.com'].map((suffix) => {
+        const prefix = register.email.split('@')[0]
+        return {
+            label: prefix + suffix,
+            value: prefix + suffix
+        }
+    })
+});
+
+const submitLogin = () => {
+    login.post(route('register'), {
+        onFinish: () => login.reset('password'),
+    });
+};
+
+const submitRegister = () => {
+    console.log('iam here');
+    register.post(route('register'), {
+        onFinish: () => register.reset('password', 'password_confirmation'),
     });
 };
 </script>
 
-<template>
-    <BreezeGuestLayout>
-        <Head title="Register" />
-
-        <BreezeValidationErrors class="mb-4" />
-
-        <form @submit.prevent="submit">
-            <div>
-                <BreezeLabel for="name" value="Name" />
-                <BreezeInput id="name" type="text" class="mt-1 block w-full" v-model="form.name" required autofocus autocomplete="name" />
-            </div>
-
-            <div class="mt-4">
-                <BreezeLabel for="email" value="Email" />
-                <BreezeInput id="email" type="email" class="mt-1 block w-full" v-model="form.email" required autocomplete="username" />
-            </div>
-
-            <div class="mt-4">
-                <BreezeLabel for="password" value="Password" />
-                <BreezeInput id="password" type="password" class="mt-1 block w-full" v-model="form.password" required autocomplete="new-password" />
-            </div>
-
-            <div class="mt-4">
-                <BreezeLabel for="password_confirmation" value="Confirm Password" />
-                <BreezeInput id="password_confirmation" type="password" class="mt-1 block w-full" v-model="form.password_confirmation" required autocomplete="new-password" />
-            </div>
-
-            <div class="flex items-center justify-end mt-4">
-                <Link :href="route('login')" class="underline text-sm text-gray-600 hover:text-gray-900">
-                    Already registered?
-                </Link>
-
-                <BreezeButton class="ml-4" :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
-                    Register
-                </BreezeButton>
-            </div>
-        </form>
-    </BreezeGuestLayout>
-</template>
+<style scoped>
+.card-tabs .n-tabs-nav--bar-type {
+    padding-left: 4px;
+}
+</style>

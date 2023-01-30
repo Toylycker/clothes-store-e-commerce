@@ -1,13 +1,25 @@
 <template >
     <div class="div">
             <n-layout has-sider position="absolute">
-                <n-layout-sider position="absolute" bordered collapse-mode="width" :collapsed-width="10" :width="240" :collapsed="collapsed"
+                <n-layout-sider position="absolute" bordered collapse-mode="width" 
+                :collapsed-width="10" :width="240" :collapsed="collapsed"
                  :show-collapsed-content=false 
-                    show-trigger @collapse="collapsed = true" @expand="collapsed = false">
+                 show-trigger="bar" @collapse="collapsed = true" @expand="collapsed = false">
+                 <div class="container"  v-if="category_id==null">
+                    <div class="container" v-for="category in categories.data" :key="category.id">
+                        <n-tree-select class="mt-1" :show-path="true" placeholder='kategoriya saylang' 
+                        :default-value="category.id"
+                               :options="[category]" children-field="children" key-field="id" label-field="name"
+                               @update:value="handleUpdateValue" />
+                    </div>
+                 </div>
     
-                    <n-tree-select class="mt-1" :show-path="true" placeholder='kategoriya saylang' :default-value="category_id?parseInt(category_id):null"
-                        :options="categories.data" children-field="children" key-field="id" label-field="name"
-                        @update:value="handleUpdateValue" />
+                 <div class="container" v-else>
+                     <n-tree-select class="mt-1" :show-path="true" placeholder='kategoriya saylang' :default-value="category_id?parseInt(category_id):null"
+                         :options="categories.data" children-field="children" key-field="id" label-field="name"
+                         @update:value="handleUpdateValue" />
+                 </div>
+
     
                     <!-- filter start -->
                     <div class="container mt-3" v-if="category_id&&options">

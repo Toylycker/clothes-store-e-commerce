@@ -16,6 +16,7 @@ class Outfit extends Model
 
 
     protected $hidden = ['pivot'];
+    protected $fillable = ['image', 'name', 'description', 'confirmed'];
 
 
     public function tags()

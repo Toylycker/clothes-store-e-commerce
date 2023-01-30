@@ -23,6 +23,11 @@ class OutfitItem extends Model
 
     public function shopCarts(): BelongsToMany
     {
-        return $this->belongsToMany(ShopCart::class, 'shop_cart_items')->withPivot('quantity');
+        return $this->belongsToMany(ShopCart::class, 'shop_cart_items', 'outfit_item_id', 'shop_cart_id')->withPivot('quantity');
+    }
+
+    public function orders()
+    {
+        return $this->hasMany(Order::class);
     }
 }

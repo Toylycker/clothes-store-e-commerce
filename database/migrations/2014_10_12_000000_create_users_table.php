@@ -18,8 +18,9 @@ return new class extends Migration
             $table->string('name')->unique();
             $table->string('password');
             $table->string('email');
-            $table->string('role')->default("user");
-            $table->string('phone')->default('0');
+            $table->string('role')->default("user");//user-seller-admin
+            $table->string('phone');
+            $table->text('address')->nullable();
             $table->rememberToken();
         });
     }

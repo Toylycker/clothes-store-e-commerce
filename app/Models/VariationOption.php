@@ -11,6 +11,7 @@ class VariationOption extends Model
 {
     use HasFactory;
     public $timestamps = false;
+    protected $fillable = ['option', 'variation_id'];
 
 
     public function outfit_items(): BelongsToMany

@@ -19,10 +19,10 @@ return new class extends Migration
             $table->foreign('location_id')->references('id')->on('locations')->cascadeOnDelete();
             $table->unsignedBigInteger('user_id')->index()->unique();
             $table->foreign('user_id')->references('id')->on('users')->cascadeOnDelete();
-            $table->string('name')->unique();
-            $table->string('last_name')->nullable();
-            $table->string('phone')->unique();
-            $table->string('address')->unique();
+            $table->string('seller_name')->unique();
+            $table->string('seller_last_name')->nullable();
+            $table->string('seller_phone')->unique();
+            $table->string('shop_address')->unique();
             $table->string('company_name')->unique();
             
 
