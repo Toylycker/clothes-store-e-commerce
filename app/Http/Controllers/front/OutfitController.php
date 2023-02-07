@@ -38,7 +38,7 @@ class OutfitController extends Controller
 
 
         $request->validate([
-            'q' => 'nullable|string|max:30', // search => q
+            'search' => 'nullable|string|max:30', // search => q
             'v' => 'nullable|array', // values => v
             // 'v.*' => 'nullable|array', // values[] => v.*
             // 'v.*.*' => 'nullable|integer|min:1|distinct', // values[][] => v.*.*
@@ -48,7 +48,7 @@ class OutfitController extends Controller
         ]);
 
         $category_id = $request->c ? $request->c : null;
-        $search = $request->q ?: null;
+        $search = $request->search ?: null;
         $f_values = $request->v ? Value::whereIn('id', $request->v)->with('option')->get()->mapToGroups(function ($value) {
 
             return [$value->option->id => $value->id];
@@ -66,7 +66,9 @@ class OutfitController extends Controller
                 $query->where('id', $category_id);
             });
         })->when($search, function ($query) use ($search) {
-            return $query->where('search', 'like', '%' . $search . '%');
+            return $query->where(function ($query) use ($search) {
+                $query->orwhere('search', 'like', '%' . $search . '%');
+                $query->orWhere('name', 'like', '%' . $search . '%');});
         })
             ->when($f_values, function ($query, $f_values) {
                 return $query->where(function ($query1) use ($f_values) {
@@ -94,7 +96,7 @@ class OutfitController extends Controller
     public function show($outfit_id, Request $request)
     {
         $outfit = Outfit::where('id', $outfit_id)
-            ->with('seller', 'values.option', 'tags', 'outfit_items.variation_options')->first();
+            ->with('seller.user', 'values.option', 'tags', 'outfit_items.variation_options')->first();
         $comments = Comment::where('outfit_id', $outfit->id)->get();
         $variations = Variation::where('outfit_id', $outfit_id)->with('variation_options.outfit_items')->get();
         $flattened = null;

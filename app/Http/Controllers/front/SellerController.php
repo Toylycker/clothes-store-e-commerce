@@ -9,6 +9,7 @@ use Illuminate\Support\Str;
 use App\Models\OutfitSeller;
 use App\Models\Seller;
 use App\Models\Location;
+use App\Models\Order;
 use App\Models\Outfit;
 use App\Models\OutfitItem;
 use App\Models\User;
@@ -181,4 +182,29 @@ class SellerController extends Controller
         return redirect()->route('home');
     }
 
+    public function showDashboard()
+    {
+        $orders = Order::where('seller_id', Auth::user()->seller->id)->with('outfitItem.outfit', 'seller')->get();
+        $paid = $orders->where('order_status', 'paid');
+        $accepted = $orders->where('order_status', 'accepted');
+        $sent = $orders->where('order_status', 'sent');
+        $received = $orders->where('order_status', 'received');
+        return Inertia::render('front/seller/SellerDashboard', [
+            'paid'=>$paid,
+            'accepted'=>$accepted,
+            'sent'=>$sent,
+            'received'=>$received,
+        ]);
+    }
+
+
+    public function acceptOrder(Order $order)
+    {
+        if (! Gate::allows('accept-order', $order)) {
+            abort(403);
+        }
+        $order->update(['order_status'=>'accepted']);
+
+        return redirect()->back();
+    }
 }

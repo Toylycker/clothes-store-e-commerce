@@ -19,9 +19,11 @@ class SellerFactory extends Factory
      */
     public function definition()
     {
+        $id = $this->faker->unique()->numberBetween($min = 2, $max = 30);
+        User::findOrFail($id)->update(['role'=>'seller']);
         return [
             'location_id' => Location::inRandomOrder()->first(),
-            'user_id' => $this->faker->unique()->numberBetween($min = 2, $max = 10),
+            'user_id' => $id,
             'seller_name' => $this->faker->unique()->name(),
             'seller_last_name' => $this->faker->unique()->lastName(),
             'seller_phone' => '86' . rand(2000000, 5999999),
