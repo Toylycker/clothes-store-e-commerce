@@ -5,6 +5,7 @@ namespace App\Http\Controllers\admin;
 use App\Models\Visitor;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Inertia\Inertia;
 
 class VisitorController extends Controller
 {
@@ -88,7 +89,7 @@ class VisitorController extends Controller
             ->paginate(50)
             ->withQueryString();
 
-        return view('admin.visitors.index', [
+        return Inertia::render('admin.visitors.index', [
             'f_id' => $f_id,
             'f_ipAddress' => $f_ipAddress,
             'f_device' => $f_device,

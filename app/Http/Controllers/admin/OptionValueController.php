@@ -5,6 +5,7 @@ namespace App\Http\Controllers\admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Option;
+use Inertia\Inertia;
 
 class OptionValueController extends Controller
 {
@@ -17,7 +18,7 @@ class OptionValueController extends Controller
     {
         $options = Option::with('values')->OrderBy('sort_order')->get();
 
-        return view('admin.options_values.index', compact("options"));
+        return Inertia::render('admin.options_values.index', compact("options"));
     }
 
     /**

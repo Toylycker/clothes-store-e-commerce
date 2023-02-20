@@ -7,12 +7,17 @@
     "require": {
         "php": "^8.0.2",
         "guzzlehttp/guzzle": "^7.2",
+        "http-interop/http-factory-guzzle": "^1.2",
         "inertiajs/inertia-laravel": "^0.5.4",
         "intervention/image": "^2.7",
         "jenssegers/agent": "^2.6",
         "laravel/framework": "^9.2",
+        "laravel/octane": "^1.4",
         "laravel/sanctum": "^2.8",
+        "laravel/scout": "^9.8",
+        "laravel/telescope": "^4.13",
         "laravel/tinker": "^2.7",
+        "meilisearch/meilisearch-php": "^1.0",
         "pusher/pusher-php-server": "^7.2",
         "spatie/laravel-collection-macros": "^7.11",
         "tightenco/ziggy": "^1.0"
@@ -58,13 +63,16 @@
     },
     "extra": {
         "laravel": {
-            "dont-discover": []
+            "dont-discover": ["laravel/telescope"]
         }
     },
     "config": {
         "optimize-autoloader": true,
         "preferred-install": "dist",
-        "sort-packages": true
+        "sort-packages": true,
+        "allow-plugins": {
+            "php-http/discovery": true
+        }
     },
     "minimum-stability": "dev",
     "prefer-stable": true

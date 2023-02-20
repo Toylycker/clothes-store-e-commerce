@@ -5,6 +5,7 @@ namespace App\Http\Controllers\admin;
 use App\Http\Controllers\Controller;
 use App\Models\Location;
 use Illuminate\Http\Request;
+use Inertia\Inertia;
 
 class LocationController extends Controller
 {
@@ -34,7 +35,7 @@ class LocationController extends Controller
         ->orderBy('id')
         ->paginate(50)
         ->withQueryString();;
-        return view('admin.locations.index', compact(['locations', 'id', 'name', 'name_en']));
+        return Inertia::render('admin.locations.index', compact(['locations', 'id', 'name', 'name_en']));
     }
 
     /**

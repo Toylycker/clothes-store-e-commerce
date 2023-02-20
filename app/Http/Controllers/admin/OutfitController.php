@@ -15,6 +15,7 @@ use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\Facades\Storage;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
+use Inertia\Inertia;
 
 class OutfitController extends Controller
 {
@@ -93,7 +94,7 @@ class OutfitController extends Controller
             ->withQueryString();
 
 
-        return view('admin.outfits.index', compact([
+        return Inertia::render('admin.outfits.index', compact([
             'id',
             'name',
             'name_en',
@@ -124,7 +125,7 @@ class OutfitController extends Controller
             ->orderBy('name')
             ->get();
 
-        return view('admin.outfits.create', [
+        return Inertia::render('admin.outfits.create', [
             'outfit' => $outfit,
             'tags' => $tags,
             'options' => $options,
@@ -224,7 +225,7 @@ class OutfitController extends Controller
             ->orderBy('name')
             ->get();
 
-        return view('admin.outfits.edit', [
+        return Inertia::render('admin.outfits.edit', [
             'outfit' => $outfit,
             'tags' => $tags,
             'options' => $options,
@@ -323,7 +324,7 @@ class OutfitController extends Controller
                 'success' => $success,
             ]);
         }else{
-                return redirect()->route('outfits.home')
+                return redirect()->route('admin.outfits.index')
             ->with([
                 'success' => $success,
             ]);
@@ -337,7 +338,7 @@ class OutfitController extends Controller
         ->get();
          $outfits;
 
-        return view('admin.outfits.show', ['outfitseller'=>$outfitseller,
+        return Inertia::render('admin.outfits.show', ['outfitseller'=>$outfitseller,
             'outfits'=>$outfits]);
     }
 

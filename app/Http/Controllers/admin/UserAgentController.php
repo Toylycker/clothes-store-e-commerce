@@ -4,6 +4,7 @@ namespace App\Http\Controllers\admin;
 
 use App\Models\UserAgent;
 use App\Http\Controllers\Controller;
+use Illuminate\Http\Request;
 
 class UserAgentController extends Controller
 {

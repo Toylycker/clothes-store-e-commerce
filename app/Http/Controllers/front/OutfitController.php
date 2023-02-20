@@ -25,6 +25,9 @@ use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
+use Laravel\Scout\Searchable;
+use Illuminate\Database\Eloquent\Builder;
+
 
 class OutfitController extends Controller
 {
@@ -61,16 +64,23 @@ class OutfitController extends Controller
         })->with('values')->get() : null;
 
 
-        $outfits = Outfit::when($category_id, function ($query) use ($category_id) {
+        if ($search) {
+            // search results from meilisearch and pull only ids
+            // later i will need to enter outfit again to pull ids and do other filters with Query Builder which scout does not support
+            $searchResults = collect(Outfit::search($search)->raw()['hits'])->pluck('id');
+        }else{$searchResults = null;}
+
+
+        $outfits = Outfit::when($search, function ($query) use ($searchResults) {
+            return $query->whereIn('id', $searchResults);
+                // $query->where(function ($query) use ($search) {
+                // $query->orwhere('search', 'like', '%' . $search . '%');
+                // $query->orWhere('name', 'like', '%' . $search . '%');});
+        })->when($category_id, function ($query) use ($category_id) {
             return $query->whereHas('categories', function ($query) use ($category_id) {
                 $query->where('id', $category_id);
             });
-        })->when($search, function ($query) use ($search) {
-            return $query->where(function ($query) use ($search) {
-                $query->orwhere('search', 'like', '%' . $search . '%');
-                $query->orWhere('name', 'like', '%' . $search . '%');});
-        })
-            ->when($f_values, function ($query, $f_values) {
+        })->when($f_values, function ($query, $f_values) {
                 return $query->where(function ($query1) use ($f_values) {
                     foreach ($f_values as $f_value) {
                         $query1->whereHas('values', function ($query2) use ($f_value) {
@@ -78,10 +88,11 @@ class OutfitController extends Controller
                         });
                     }
                 });
-            })->with('values', 'tags', 'seller')->inRandomOrder()->paginate(14, ["*"], 'page')
+            })
+            ->with('values', 'tags', 'seller')
+            ->paginate(14, ["*"], 'page')
             ->withQueryString();
-        // return $outfits;
-        // return CategoryResource::collection($categories);
+
         return Inertia::render('front/Products', [
             "options" => $options,
             "products" => $outfits,

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\admin;
 use App\Http\Controllers\Controller;
 use App\Models\Tag;
 use Illuminate\Http\Request;
+use Inertia\Inertia;
 
 class TagController extends Controller
 {
@@ -34,7 +35,7 @@ class TagController extends Controller
         ->orderBy('id')
         ->paginate(50)
         ->withQueryString();;
-        return view('admin.tags.index', compact(['tags', 'id', 'name', 'name_en']));
+        return Inertia::render('admin.tags.index', compact(['tags', 'id', 'name', 'name_en']));
     }
 
     /**

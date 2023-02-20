@@ -6,19 +6,28 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Facades\Storage;
-
+use Laravel\Scout\Searchable;
 
 class Outfit extends Model
 {
-    use HasFactory;
+    use HasFactory, Searchable;
 
     protected $guarded = ['id'];
 
 
     protected $hidden = ['pivot'];
-    protected $fillable = ['image', 'name', 'description', 'confirmed'];
+    protected $fillable = ['image', 'name', 'description', 'confirmed', 'search'];
 
 
+    public function toSearchableArray()
+{
+    return [
+        'id' => (int) $this->id,
+        'name' => $this->name,
+        'search' => $this->search,
+        'category_id' => (int) $this->category_id,
+    ];
+}
     public function tags()
     {
         return $this->belongsToMany(Tag::class, 'outfit_tags');

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\admin;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Inertia\Inertia;
 
 class UserController extends Controller
 {
@@ -49,7 +50,7 @@ class UserController extends Controller
         ->with('seller')
         ->paginate(50)
         ->withQueryString();;
-        return view('admin.users.index', compact([
+        return Inertia::render('admin.users.index', compact([
             'id',
             'username',
             'role',

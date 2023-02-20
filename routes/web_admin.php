@@ -4,6 +4,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\admin\OutfitController;
 use App\Http\Controllers\admin\DashboardController;
+use App\Http\Controllers\admin\DeliveryController;
 use App\Http\Controllers\admin\LocationController;
 use App\Http\Controllers\admin\SellerController;
 use App\Http\Controllers\admin\TagController;
@@ -38,7 +39,6 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
         Route::get('/index', [DashboardController::class, 'index'])->name('dashboard');
         Route::resources([
             'locations' => LocationController::class,
-            'ages' => AgeController::class,
             'sellers' => SellerController::class,
             'tags' => TagController::class,
             'users' => UserController::class,
@@ -48,5 +48,10 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
             'values' => ValueController::class,
             'orders' => ValueController::class,
         ]);
+});
+
+Route::controller(DeliveryController::class)->middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
+        Route::get('/delivery/index', [DeliveryController::class, 'index'])->name('delivery.index');
+        Route::post('/store/deliveryman', [DeliveryController::class, 'storeDeliveryman'])->name('store.deliveryman');
 });
 

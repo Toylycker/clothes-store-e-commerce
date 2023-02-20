@@ -56,7 +56,7 @@ class SellerController extends Controller
         ->with('location')
         ->paginate(50)
         ->withQueryString();;
-        return view('admin.sellers.index', compact([
+        return Inertia::render('admin.sellers.index', compact([
             'id',
             'user_id',
             'location',
